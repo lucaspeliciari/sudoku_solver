@@ -1,6 +1,12 @@
 /*
     SUDOKU SOLVER - 07/03/2023
 
+    Works with extremely easy puzzles, not so much with harder ones
+        It never assumes or tries values, only what is 100% certain
+    Suuuuper slow, especially with all the prints
+    Add more comments to explain things
+    Clean things up
+
     Sample: 
     0 6 0 3 0 7 0 0 5
     0 0 0 0 0 0 0 0 0
@@ -11,6 +17,22 @@
     5 4 0 2 0 0 6 0 3
     0 0 0 0 0 0 0 0 0
     8 0 0 6 0 3 0 4 0
+
+
+
+
+    GETS STUCK ON THIS:
+    8 9 3  1 7 5  6 4 2
+    7 2 4  0 0 0  9 0 5
+    5 6 1  2 4 9  3 8 7
+
+    2 0 0  0 0 0  0 0 3
+    4 3 6  9 1 7  5 2 8
+    9 0 0  0 0 0  0 0 1
+
+    3 0 2  4 0 8  1 0 9  
+    6 0 0  0 0 0  0 0 4
+    1 4 7  3 9 2  8 5 6
 */
 
 
@@ -99,14 +121,10 @@ int main(int argc, char* argv[])
                 printSudoku(sudoku);
                 // return 0;
 
-                if (i == 8 && j == 8) return 0; // DEBUG
+                // if (i == 8 && j == 8) return 0; // DEBUG
             }
-            
         }
         solved = checkSolved(sudoku);
-
-        
-
     }
     printSudoku(sudoku);
 
