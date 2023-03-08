@@ -32,8 +32,8 @@ void checkHorizontal(int* &sudoku, int i, int j, int* &answer);
 void checkVertical(int* &sudoku, int i, int j, int* &answer);
 void checkBox(int* &sudoku, int i, int j, int* &answer);
 bool checkSolved(int* &sudoku);
-void printAnswer(int* &sudoku);
-
+void printSudoku(int* &sudoku);
+void printCoordSudoku(int* &sudoku);  // debug
 
 int main(int argc, char* argv[])
 {
@@ -51,10 +51,13 @@ int main(int argc, char* argv[])
         sudoku[i] = atoi(argv[i+1]);
     }
 
+    // printCoordSudoku(sudoku); return 0;  // DEBUG
+
     bool solved = false;
     int* answer = new int[9];
     resetAnswer(answer);
-    debugPrint(sudoku, answer);
+
+    debugPrint(sudoku, answer);  // DEBUG
 
     while (!solved)
     {
@@ -62,6 +65,8 @@ int main(int argc, char* argv[])
         {
             for (int i = 0; i < width; i++)
             {
+                cout << endl << "i: " << i << " j:" << j << endl;
+
                 resetAnswer(answer);
                 if (sudoku[index(i, j)] == 0)
                 {
@@ -81,23 +86,29 @@ int main(int argc, char* argv[])
                         continue;
                     }
 
-                    // if (length(answer) > 0) checkBox(sudoku, i, j, answer);
+                    if (length(answer) > 0) checkBox(sudoku, i, j, answer);
 
-                    // if (length(answer) == 1)
-                    // {
-                    //     sudoku[index(i, j)] = get(answer);
-                    //     continue;
-                    // }
+                    if (length(answer) == 1)
+                    {
+                        sudoku[index(i, j)] = get(answer);
+                        continue;
+                    }
                 }
                 debugPrint(sudoku, answer);
                 cout << sudoku[index(0, 0)] << endl;
-                printAnswer(sudoku);
-                return 0;
+                printSudoku(sudoku);
+                // return 0;
+
+                if (i == 8 && j == 8) return 0; // DEBUG
             }
+            
         }
         solved = checkSolved(sudoku);
+
+        
+
     }
-    printAnswer(sudoku);
+    printSudoku(sudoku);
 
     return 0;
 }
@@ -114,6 +125,7 @@ void debugPrint(int* &sudoku, int* &answer)
     {
         cout << i << " " << answer[i] << " " << endl;
     }
+    cout << endl;
 }
 
 int index(int i, int j)
@@ -156,6 +168,7 @@ void checkHorizontal(int* &sudoku, int x, int j, int* &answer)  // x is probably
             answer[sudoku[index(i, j)]-1] = 0;
         }
     }
+    cout << endl;
 }
 
 void checkVertical(int* &sudoku, int i, int y, int* &answer)  // y is probably unnecessary
@@ -168,12 +181,32 @@ void checkVertical(int* &sudoku, int i, int y, int* &answer)  // y is probably u
             answer[sudoku[index(i, j)]-1] = 0;
         }
     }
+    cout << endl;
 }
 
 
-void checkBox(int* &sudoku, int i, int j, int* &answer)
+void checkBox(int* &sudoku, int i, int j, int* &answer)  // test this a lot
 {
-    
+    int boxX = i / 3;
+    int boxY = j / 3;
+    cout << "BOX X: " << boxX << " BOX Y: " << boxY << endl;
+
+    for (int j = boxY * 3; j < 3; j++)
+    {
+        for (int i = boxX * 3; i < 3; i++)
+        {
+            // cout << "(" << i << "," << j << ") ";  // DEBUG
+
+            if (sudoku[index(i, j)] != 0)
+            {
+                cout << "CHECKED BOX: " << sudoku[index(i, j)] << endl;
+                answer[sudoku[index(i, j)]-1] = 0;
+            }
+        }
+        // cout << endl;  // DEBUG
+    }
+
+    cout << endl;
 }
 
 bool checkSolved(int* &sudoku)
@@ -188,7 +221,7 @@ bool checkSolved(int* &sudoku)
     return true;
 }
 
-void printAnswer(int* &sudoku)
+void printSudoku(int* &sudoku)
 {
     cout << endl << "ANSWER:" << endl;
     for (int j = 0; j < height; j++)
@@ -204,3 +237,18 @@ void printAnswer(int* &sudoku)
     cout << endl;
 }
 
+void printCoordSudoku(int* &sudoku)
+{
+    cout << endl << "ANSWER:" << endl;
+    for (int j = 0; j < height; j++)
+    {
+        for (int i = 0; i < width; i++)
+        {
+            cout << "(" << i+1 << "," << j+1 << ") ";
+            if (i != 0 && (i+1) % 3 == 0) cout << " ";
+        }
+        cout << endl;
+        if (j != 0 && (j+1) % 3 == 0) cout << endl;
+    }
+    cout << endl;
+}
