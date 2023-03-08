@@ -7,6 +7,7 @@
     Add more comments to explain things
     Clean things up
     Use puzzles in files or maybe images instead of typing them as arg
+    CHECK IF ANSWERS ARE CORRECT!
 
     Can solve this sample:  
     0 9 3  1 0 5  6 4 0
@@ -20,23 +21,11 @@
     3 0 2  4 0 8  1 0 9
     6 0 0  0 0 0  0 0 4
     0 4 7  3 0 2  8 5 0
-
-    ANSWER:
-    8 9 3  1 7 5  6 4 2
-    7 2 4  8 3 6  9 1 5    CHECK IF this ANSWER IS CORRECT!
-    5 6 1  2 4 9  3 8 7
-
-    2 1 5  6 8 4  7 9 3
-    4 3 6  9 1 7  5 2 8
-    9 7 8  5 2 3  4 6 1  
-
-    3 5 2  4 6 8  1 7 9
-    6 8 9  7 5 1  2 3 4
-    1 4 7  3 9 2  8 5 6
 */
 
 
 #include <iostream>
+#include <cstring>
 
 using namespace std;
 
@@ -60,9 +49,14 @@ void printCoordSudoku(int* &sudoku);  // debug
 
 int main(int argc, char* argv[])
 {
-    // cout << "\033[2J\033[1;1H";  // should be clear screen
+    // debug mode
+    if (strcmp(argv[1], "-d") == 0)  
+    {
+        debug = true;
+        cout <<"DEBUG ON" << endl;
+    }
 
-    if (argc != 82)  // only 9x9 sudoku supported
+    if ((!debug && argc != 82) || (debug && argc != 83))  // only 9x9 sudoku supported
     {
         cout << "Sudoku puzzle string has to have 81 digits!" << endl << "Yours only has " << argc - 1 << " digits";
         return 1;
@@ -71,9 +65,19 @@ int main(int argc, char* argv[])
     // should return 2 if there are letters or 3 if digits that are not 1-9
 
     int* sudoku = new int[width * height];
-    for (int i = 0; i < argc; i++)
+    if (!debug)
     {
-        sudoku[i] = atoi(argv[i+1]);
+        for (int i = 0; i < argc-1; i++)
+        {
+            sudoku[i] = atoi(argv[i+1]);
+        }
+    }
+    else
+    {
+        for (int i = 0; i < argc-2; i++)
+        {
+            sudoku[i] = atoi(argv[i+2]);
+        }
     }
 
     // printCoordSudoku(sudoku);
@@ -116,14 +120,9 @@ int main(int argc, char* argv[])
                         sudoku[index(i, j)] = get(answer);
                         continue;
                     }
-
-                    // if (i ==7 && j == 1) return 0;  // DEBUG
                 }
                 if (debug) debugPrint(sudoku, answer);  // call this printAnswer or something
                 if (debug) printSudoku(sudoku);
-                
-
-                // if (i == 8 && j == 8) return 0; // DEBUG
             }
         }
         solved = checkSolved(sudoku);
