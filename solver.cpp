@@ -69,14 +69,19 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    // should return 2 if there are letters or 3 if digits that are not 1-9
-
     int* sudoku = new int[width * height];
     if (!debug)
     {
         for (int i = 0; i < argc-1; i++)
         {
             sudoku[i] = atoi(argv[i+1]);
+
+            // error handling
+            if (sudoku[i] > 9 || sudoku[i] < 0)
+            {
+                cout << "Only numbers from 0 to 9 are valid! \"" << argv[i+1] << "\" is not valid!" << endl;
+                return 3;
+            }
         }
     }
     else
@@ -84,8 +89,17 @@ int main(int argc, char* argv[])
         for (int i = 0; i < argc-2; i++)
         {
             sudoku[i] = atoi(argv[i+2]);
+
+            // error handling
+            if (sudoku[i] > 9 || sudoku[i] < 0)
+            {
+                cout << "Only numbers from 0 to 9 are valid! \"" << argv[i+1] << "\" is not valid!" << endl;
+                return 3;
+            }
         }
     }
+
+    cout << "AOGJMPWSOMGPASG?" << sudoku[index(8, 8)];
 
     // printCoordSudoku(sudoku);
 
