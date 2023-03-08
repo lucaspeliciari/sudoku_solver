@@ -1,26 +1,5 @@
 /*
     SUDOKU SOLVER - 07/03/2023
-
-    Works with extremely easy puzzles, gets stuck on harder ones
-        It never assumes or tries values, only what is 100% certain
-    Suuuuper slow, especially with all the prints
-    Add more comments to explain things
-    Clean things up
-    Use puzzles in files or maybe images instead of typing them as arg
-    CHECK IF ANSWERS ARE CORRECT!
-
-    Can solve this sample:  
-    0 9 3  1 0 5  6 4 0
-    7 0 0  0 0 0  0 0 5
-    5 0 1  2 0 9  3 0 7
-
-    2 0 0  0 0 0  0 0 3
-    0 3 6  9 0 7  5 2 0
-    9 0 0  0 0 0  0 0 1
-
-    3 0 2  4 0 8  1 0 9
-    6 0 0  0 0 0  0 0 4
-    0 4 7  3 0 2  8 5 0
 */
 
 
