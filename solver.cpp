@@ -56,8 +56,7 @@ void print(int* &possibleAnswers);
 
 int main(int argc, char* argv[])
 {
-    // debug mode
-    if (strcmp(argv[1], "-d") == 0)  
+    if (strcmp(argv[1], "-d") == 0)  // if debug mode
     {
         debug = true;
         cout <<"DEBUG ON" << endl;
@@ -70,32 +69,14 @@ int main(int argc, char* argv[])
     }
 
     int* sudoku = new int[width * height];
-    if (!debug)
+    int offset = (debug) ? 2 : 1;
+    for (int i = 0; i < argc-1; i++)
     {
-        for (int i = 0; i < argc-1; i++)
+        sudoku[i] = atoi(argv[i+offset]);
+        if (sudoku[i] > 9 || sudoku[i] < 0)  // input handling
         {
-            sudoku[i] = atoi(argv[i+1]);
-
-            // input handling
-            if (sudoku[i] > 9 || sudoku[i] < 0)
-            {
-                cout << "Only numbers from 0 to 9 are valid! \"" << argv[i+1] << "\" is not valid!" << endl;
-                return 3;
-            }
-        }
-    }
-    else
-    {
-        for (int i = 0; i < argc-2; i++)
-        {
-            sudoku[i] = atoi(argv[i+2]);
-
-            // input handling
-            if (sudoku[i] > 9 || sudoku[i] < 0)
-            {
-                cout << "Only numbers from 0 to 9 are valid! \"" << argv[i+1] << "\" is not valid!" << endl;
-                return 3;
-            }
+            cout << "Only numbers from 0 to 9 are valid! \"" << argv[i+offset] << "\" is not valid!" << endl;
+            return 3;
         }
     }
 
