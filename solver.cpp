@@ -1,11 +1,12 @@
 /*
     SUDOKU SOLVER - 07/03/2023
 
-    Works with extremely easy puzzles, not so much with harder ones
+    Works with extremely easy puzzles, gets stuck on harder ones
         It never assumes or tries values, only what is 100% certain
     Suuuuper slow, especially with all the prints
     Add more comments to explain things
     Clean things up
+    Use puzzles in files or maybe images instead of typing them as arg
 
     Can solve this sample:  
     0 9 3  1 0 5  6 4 0
@@ -42,6 +43,7 @@ using namespace std;
 
 const int width = 9;
 const int height = 9;
+bool debug = false;
 
 void debugPrint(int* &sudoku, int* &answer);
 
@@ -60,11 +62,13 @@ int main(int argc, char* argv[])
 {
     // cout << "\033[2J\033[1;1H";  // should be clear screen
 
-    if (argc != 82)
+    if (argc != 82)  // only 9x9 sudoku supported
     {
         cout << "Sudoku puzzle string has to have 81 digits!" << endl << "Yours only has " << argc - 1 << " digits";
         return 1;
     }
+
+    // should return 2 if there are letters or 3 if digits that are not 1-9
 
     int* sudoku = new int[width * height];
     for (int i = 0; i < argc; i++)
@@ -72,13 +76,11 @@ int main(int argc, char* argv[])
         sudoku[i] = atoi(argv[i+1]);
     }
 
-    // printCoordSudoku(sudoku); return 0;  // DEBUG
+    // printCoordSudoku(sudoku);
 
     bool solved = false;
     int* answer = new int[9];
     resetAnswer(answer);
-
-    // debugPrint(sudoku, answer);  // DEBUG
 
     while (!solved)
     {
@@ -86,7 +88,7 @@ int main(int argc, char* argv[])
         {
             for (int i = 0; i < width; i++)
             {
-                // cout << endl << "i: " << i << " j:" << j << endl;  // DEBUG
+                if (debug) cout << endl << "i: " << i << " j:" << j << endl;  // DEBUG
 
                 resetAnswer(answer);
                 if (sudoku[index(i, j)] == 0)
@@ -117,8 +119,8 @@ int main(int argc, char* argv[])
 
                     // if (i ==7 && j == 1) return 0;  // DEBUG
                 }
-                // debugPrint(sudoku, answer);  // call this printAnswer or something
-                // printSudoku(sudoku);
+                if (debug) debugPrint(sudoku, answer);  // call this printAnswer or something
+                if (debug) printSudoku(sudoku);
                 
 
                 // if (i == 8 && j == 8) return 0; // DEBUG
@@ -132,7 +134,7 @@ int main(int argc, char* argv[])
 }
 
 
-void debugPrint(int* &sudoku, int* &answer)
+void debugPrint(int* &sudoku, int* &answer)  // rename this
 {
     cout << "DEBUG" << endl;
     // for (int i = 0; i < height * width; i++)
@@ -182,11 +184,11 @@ void checkHorizontal(int* &sudoku, int x, int j, int* &answer)  // x is probably
     {
         if (i != x && sudoku[index(i, j)] != 0)
         {
-            // cout << "CHECKED HOR: " << sudoku[index(i, j)] << endl;  // DEBUG
+            if (debug) cout << "CHECKED HOR: " << sudoku[index(i, j)] << endl;
             answer[sudoku[index(i, j)]-1] = 0;
         }
     }
-    // cout << endl;  // DEBUG
+    if (debug) cout << endl;
 }
 
 void checkVertical(int* &sudoku, int i, int y, int* &answer)  // y is probably unnecessary
@@ -195,11 +197,11 @@ void checkVertical(int* &sudoku, int i, int y, int* &answer)  // y is probably u
     {
         if (j != y && sudoku[index(i, j)] != 0)
         {
-            // cout << "CHECKED VER: " << sudoku[index(i, j)] << endl;  // DEBUG
+            if (debug) cout << "CHECKED VER: " << sudoku[index(i, j)] << endl;
             answer[sudoku[index(i, j)]-1] = 0;
         }
     }
-    // cout << endl;  // DEBUG
+    if (debug) cout << endl;
 }
 
 
@@ -208,24 +210,24 @@ void checkBox(int* &sudoku, int i, int j, int* &answer)  // bugged
     int boxX = i / 3;
     int boxY = j / 3;
 
-    // cout << "BOX X: " << boxX << " BOX Y: " << boxY << endl;  // DEBUG
+    if (debug) cout << "BOX X: " << boxX << " BOX Y: " << boxY << endl;
 
     for (int j = boxY * 3; j < boxY * 3 + 3; j++)
     {
         for (int i = boxX * 3; i < boxX * 3 + 3; i++)
         {
-            // cout << "(" << i << "," << j << ") ";  // DEBUG
+            if (debug) cout << "(" << i << "," << j << ") ";
 
             if (sudoku[index(i, j)] != 0)
             {
-                // cout << "CHECKED BOX: " << sudoku[index(i, j)] << endl;  // DEBUG
+                if (debug) cout << "CHECKED BOX: " << sudoku[index(i, j)] << endl;
                 answer[sudoku[index(i, j)]-1] = 0;
             }
         }
-        // cout << endl;  // DEBUG
+        if (debug) cout << endl;
     }
 
-    // cout << endl;  // DEBUG
+    if (debug) cout << endl;
 }
 
 bool checkSolved(int* &sudoku)
