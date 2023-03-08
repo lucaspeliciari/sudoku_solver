@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
         {
             sudoku[i] = atoi(argv[i+1]);
 
-            // error handling
+            // input handling
             if (sudoku[i] > 9 || sudoku[i] < 0)
             {
                 cout << "Only numbers from 0 to 9 are valid! \"" << argv[i+1] << "\" is not valid!" << endl;
@@ -90,7 +90,7 @@ int main(int argc, char* argv[])
         {
             sudoku[i] = atoi(argv[i+2]);
 
-            // error handling
+            // input handling
             if (sudoku[i] > 9 || sudoku[i] < 0)
             {
                 cout << "Only numbers from 0 to 9 are valid! \"" << argv[i+1] << "\" is not valid!" << endl;
@@ -98,8 +98,6 @@ int main(int argc, char* argv[])
             }
         }
     }
-
-    cout << "AOGJMPWSOMGPASG?" << sudoku[index(8, 8)];
 
     // printCoordSudoku(sudoku);
 
