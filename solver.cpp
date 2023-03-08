@@ -41,9 +41,9 @@ int length(int* &possibleAnswers);
 void reset(int* &possibleAnswers);
 int get(int* &possibleAnswers);
 
-void checkHorizontal(int* &sudoku, int i, int j, int* &possibleAnswers);
-void checkVertical(int* &sudoku, int i, int j, int* &possibleAnswers);
-void checkBox(int* &sudoku, int i, int j, int* &possibleAnswers);
+bool checkHorizontal(int* &sudoku, int i, int j, int* &possibleAnswers);
+bool checkVertical(int* &sudoku, int i, int j, int* &possibleAnswers);
+bool checkBox(int* &sudoku, int i, int j, int* &possibleAnswers);
 bool checkSolved(int* &sudoku);
 
 void printSudoku(int* &sudoku);
@@ -103,31 +103,9 @@ int main(int argc, char* argv[])
 
                 reset(possibleAnswers);
                 if (sudoku[index(i, j)] == 0)
-                {
-                    if (length(possibleAnswers) > 1) checkHorizontal(sudoku, i, j, possibleAnswers);
-
-                    if (length(possibleAnswers) == 1)
-                    {
+                    if (checkHorizontal(sudoku, i, j, possibleAnswers) | checkVertical(sudoku, i, j, possibleAnswers) | checkBox(sudoku, i, j, possibleAnswers))
                         sudoku[index(i, j)] = get(possibleAnswers);
-                        continue;
-                    }
-
-                    if (length(possibleAnswers) > 1) checkVertical(sudoku, i, j, possibleAnswers);
-
-                    if (length(possibleAnswers) == 1)
-                    {
-                        sudoku[index(i, j)] = get(possibleAnswers);
-                        continue;
-                    }
-
-                    if (length(possibleAnswers) > 1) checkBox(sudoku, i, j, possibleAnswers);
-
-                    if (length(possibleAnswers) == 1)
-                    {
-                        sudoku[index(i, j)] = get(possibleAnswers);
-                        continue;
-                    }
-                }
+                
                 if (debug) print(possibleAnswers);
                 if (debug) printSudoku(sudoku);
             }
@@ -180,7 +158,7 @@ int get(int* &possibleAnswers)
     return 0;
 }
 
-void checkHorizontal(int* &sudoku, int x, int j, int* &possibleAnswers)  // x is probably unnecessary
+bool checkHorizontal(int* &sudoku, int x, int j, int* &possibleAnswers)  // x is probably unnecessary
 {
     for (int i = 0; i < width; i++)
     {
@@ -191,9 +169,12 @@ void checkHorizontal(int* &sudoku, int x, int j, int* &possibleAnswers)  // x is
         }
     }
     if (debug) cout << endl;
+
+    if (length(possibleAnswers) == 1) return true;
+    else return false;
 }
 
-void checkVertical(int* &sudoku, int i, int y, int* &possibleAnswers)  // y is probably unnecessary
+bool checkVertical(int* &sudoku, int i, int y, int* &possibleAnswers)  // y is probably unnecessary
 {
     for (int j = 0; j < height; j++)
     {
@@ -204,10 +185,13 @@ void checkVertical(int* &sudoku, int i, int y, int* &possibleAnswers)  // y is p
         }
     }
     if (debug) cout << endl;
+
+    if (length(possibleAnswers) == 1) return true;
+    else return false;
 }
 
 
-void checkBox(int* &sudoku, int i, int j, int* &possibleAnswers)  // bugged
+bool checkBox(int* &sudoku, int i, int j, int* &possibleAnswers)  // bugged
 {
     int boxX = i / 3;
     int boxY = j / 3;
@@ -230,6 +214,9 @@ void checkBox(int* &sudoku, int i, int j, int* &possibleAnswers)  // bugged
     }
 
     if (debug) cout << endl;
+
+    if (length(possibleAnswers) == 1) return true;
+    else return false;
 }
 
 bool checkSolved(int* &sudoku)
