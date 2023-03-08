@@ -65,6 +65,7 @@ int main(int argc, char* argv[])
     int* possibleAnswers = new int[9];
     reset(possibleAnswers);
 
+    int tries = 0;
     while (!solved)
     {
         for (int j = 0; j < height; j++)
@@ -75,14 +76,20 @@ int main(int argc, char* argv[])
 
                 reset(possibleAnswers);
                 if (sudoku[index(i, j)] == 0)
+                {
                     if (checkHorizontal(sudoku, i, j, possibleAnswers) | checkVertical(sudoku, i, j, possibleAnswers) | checkBox(sudoku, i, j, possibleAnswers))
+                    {
                         sudoku[index(i, j)] = get(possibleAnswers);
+                        tries = 0;
+                    }
+                }
                 
                 if (debug) print(possibleAnswers);
                 if (debug) printSudoku(sudoku);
             }
         }
         solved = checkSolved(sudoku);
+        tries++;
     }
     printSudoku(sudoku);
 
