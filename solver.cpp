@@ -7,31 +7,30 @@
     Add more comments to explain things
     Clean things up
 
-    Sample: 
-    0 9 3 1 0 5 6 4 0
-    7 0 0 0 0 0 0 0 5
-    5 0 1 2 0 9 3 0 7
-    2 0 0 0 0 0 0 0 3
-    0 3 6 9 0 7 5 2 0
-    9 0 0 0 0 0 0 0 1
-    3 0 2 4 0 8 1 0 9
-    6 0 0 0 0 0 0 0 4
-    0 4 7 3 0 2 8 5 0
-
-
-
-
-    GETS STUCK ON THIS:
-    8 9 3  1 7 5  6 4 2
-    7 2 4  0 0 0  9 0 5
-    5 6 1  2 4 9  3 8 7
+    Can solve this sample:  
+    0 9 3  1 0 5  6 4 0
+    7 0 0  0 0 0  0 0 5
+    5 0 1  2 0 9  3 0 7
 
     2 0 0  0 0 0  0 0 3
-    4 3 6  9 1 7  5 2 8
+    0 3 6  9 0 7  5 2 0
     9 0 0  0 0 0  0 0 1
 
-    3 0 2  4 0 8  1 0 9  
+    3 0 2  4 0 8  1 0 9
     6 0 0  0 0 0  0 0 4
+    0 4 7  3 0 2  8 5 0
+
+    ANSWER:
+    8 9 3  1 7 5  6 4 2
+    7 2 4  8 3 6  9 1 5    CHECK IF this ANSWER IS CORRECT!
+    5 6 1  2 4 9  3 8 7
+
+    2 1 5  6 8 4  7 9 3
+    4 3 6  9 1 7  5 2 8
+    9 7 8  5 2 3  4 6 1  
+
+    3 5 2  4 6 8  1 7 9
+    6 8 9  7 5 1  2 3 4
     1 4 7  3 9 2  8 5 6
 */
 
@@ -79,7 +78,7 @@ int main(int argc, char* argv[])
     int* answer = new int[9];
     resetAnswer(answer);
 
-    debugPrint(sudoku, answer);  // DEBUG
+    // debugPrint(sudoku, answer);  // DEBUG
 
     while (!solved)
     {
@@ -87,7 +86,7 @@ int main(int argc, char* argv[])
         {
             for (int i = 0; i < width; i++)
             {
-                cout << endl << "i: " << i << " j:" << j << endl;
+                // cout << endl << "i: " << i << " j:" << j << endl;  // DEBUG
 
                 resetAnswer(answer);
                 if (sudoku[index(i, j)] == 0)
@@ -100,7 +99,7 @@ int main(int argc, char* argv[])
                         continue;
                     }
 
-                    if (length(answer) > 0) checkVertical(sudoku, i, j, answer);
+                    if (length(answer) > 1) checkVertical(sudoku, i, j, answer);
 
                     if (length(answer) == 1)
                     {
@@ -108,18 +107,19 @@ int main(int argc, char* argv[])
                         continue;
                     }
 
-                    if (length(answer) > 0) checkBox(sudoku, i, j, answer);
+                    if (length(answer) > 1) checkBox(sudoku, i, j, answer);
 
                     if (length(answer) == 1)
                     {
                         sudoku[index(i, j)] = get(answer);
                         continue;
                     }
+
+                    // if (i ==7 && j == 1) return 0;  // DEBUG
                 }
-                debugPrint(sudoku, answer);
-                cout << sudoku[index(0, 0)] << endl;
-                printSudoku(sudoku);
-                // return 0;
+                // debugPrint(sudoku, answer);  // call this printAnswer or something
+                // printSudoku(sudoku);
+                
 
                 // if (i == 8 && j == 8) return 0; // DEBUG
             }
@@ -182,11 +182,11 @@ void checkHorizontal(int* &sudoku, int x, int j, int* &answer)  // x is probably
     {
         if (i != x && sudoku[index(i, j)] != 0)
         {
-            cout << "CHECKED HOR: " << sudoku[index(i, j)] << endl;
+            // cout << "CHECKED HOR: " << sudoku[index(i, j)] << endl;  // DEBUG
             answer[sudoku[index(i, j)]-1] = 0;
         }
     }
-    cout << endl;
+    // cout << endl;  // DEBUG
 }
 
 void checkVertical(int* &sudoku, int i, int y, int* &answer)  // y is probably unnecessary
@@ -195,36 +195,37 @@ void checkVertical(int* &sudoku, int i, int y, int* &answer)  // y is probably u
     {
         if (j != y && sudoku[index(i, j)] != 0)
         {
-            cout << "CHECKED VER: " << sudoku[index(i, j)] << endl;
+            // cout << "CHECKED VER: " << sudoku[index(i, j)] << endl;  // DEBUG
             answer[sudoku[index(i, j)]-1] = 0;
         }
     }
-    cout << endl;
+    // cout << endl;  // DEBUG
 }
 
 
-void checkBox(int* &sudoku, int i, int j, int* &answer)  // test this a lot
+void checkBox(int* &sudoku, int i, int j, int* &answer)  // bugged
 {
     int boxX = i / 3;
     int boxY = j / 3;
-    cout << "BOX X: " << boxX << " BOX Y: " << boxY << endl;
 
-    for (int j = boxY * 3; j < 3; j++)
+    // cout << "BOX X: " << boxX << " BOX Y: " << boxY << endl;  // DEBUG
+
+    for (int j = boxY * 3; j < boxY * 3 + 3; j++)
     {
-        for (int i = boxX * 3; i < 3; i++)
+        for (int i = boxX * 3; i < boxX * 3 + 3; i++)
         {
             // cout << "(" << i << "," << j << ") ";  // DEBUG
 
             if (sudoku[index(i, j)] != 0)
             {
-                cout << "CHECKED BOX: " << sudoku[index(i, j)] << endl;
+                // cout << "CHECKED BOX: " << sudoku[index(i, j)] << endl;  // DEBUG
                 answer[sudoku[index(i, j)]-1] = 0;
             }
         }
         // cout << endl;  // DEBUG
     }
 
-    cout << endl;
+    // cout << endl;  // DEBUG
 }
 
 bool checkSolved(int* &sudoku)
@@ -252,7 +253,6 @@ void printSudoku(int* &sudoku)
         cout << endl;
         if (j != 0 && (j+1) % 3 == 0) cout << endl;
     }
-    cout << endl;
 }
 
 void printCoordSudoku(int* &sudoku)
