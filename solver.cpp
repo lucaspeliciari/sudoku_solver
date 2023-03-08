@@ -22,15 +22,29 @@ using namespace std;
 const int width = 9;
 const int height = 9;
 
+void debugPrint(int* &sudoku, int* &answer);
+
 int index(int i, int j);
-bool checkHorizontal(int* &sudoku, int i, int j);
-bool checkVertical(int* &sudoku, int i, int j);
-bool checkBox(int* &sudoku, int i, int j);
+int length(int* &answer);
+void resetAnswer(int* &answer);
+int get(int* &answer);
+void checkHorizontal(int* &sudoku, int i, int j, int* &answer);
+void checkVertical(int* &sudoku, int i, int j, int* &answer);
+void checkBox(int* &sudoku, int i, int j, int* &answer);
 bool checkSolved(int* &sudoku);
+void printAnswer(int* &sudoku);
 
 
 int main(int argc, char* argv[])
 {
+    // cout << "\033[2J\033[1;1H";  // should be clear screen
+
+    if (argc != 82)
+    {
+        cout << "Sudoku puzzle string has to have 81 digits!" << endl << "Yours only has " << argc - 1 << " digits";
+        return 1;
+    }
+
     int* sudoku = new int[width * height];
     for (int i = 0; i < argc; i++)
     {
@@ -38,32 +52,69 @@ int main(int argc, char* argv[])
     }
 
     bool solved = false;
+    int* answer = new int[9];
+    resetAnswer(answer);
+    debugPrint(sudoku, answer);
+
     while (!solved)
     {
         for (int j = 0; j < height; j++)
         {
             for (int i = 0; i < width; i++)
             {
-                // cout << index(i, j) << ": " << sudoku[index(i, j)] << endl;
+                resetAnswer(answer);
                 if (sudoku[index(i, j)] == 0)
                 {
-                    checkHorizontal(sudoku, i, j);
-                    checkVertical(sudoku, i, j);
-                    checkBox(sudoku, i, j);
+                    if (length(answer) > 1) checkHorizontal(sudoku, i, j, answer);
+
+                    if (length(answer) == 1)
+                    {
+                        sudoku[index(i, j)] = get(answer);
+                        continue;
+                    }
+
+                    if (length(answer) > 0) checkVertical(sudoku, i, j, answer);
+
+                    if (length(answer) == 1)
+                    {
+                        sudoku[index(i, j)] = get(answer);
+                        continue;
+                    }
+
+                    // if (length(answer) > 0) checkBox(sudoku, i, j, answer);
+
+                    // if (length(answer) == 1)
+                    // {
+                    //     sudoku[index(i, j)] = get(answer);
+                    //     continue;
+                    // }
                 }
+                debugPrint(sudoku, answer);
+                cout << sudoku[index(0, 0)] << endl;
+                printAnswer(sudoku);
+                return 0;
             }
         }
         solved = checkSolved(sudoku);
     }
-    
-
-
-
-
+    printAnswer(sudoku);
 
     return 0;
 }
 
+
+void debugPrint(int* &sudoku, int* &answer)
+{
+    cout << "DEBUG" << endl;
+    // for (int i = 0; i < height * width; i++)
+    // {
+    //     cout << i << " " << sudoku[i] << endl;
+    // }
+    for (int i = 0; i < 9; i++)
+    {
+        cout << i << " " << answer[i] << " " << endl;
+    }
+}
 
 int index(int i, int j)
 {
@@ -71,28 +122,58 @@ int index(int i, int j)
     return index;
 }
 
-bool checkHorizontal(int* &sudoku, int x, int j)
+void resetAnswer(int* &answer)
+{
+    for (int i = 0; i < width; i++) answer[i] = i+1;
+}
+
+int length(int* &answer)
+{
+    int length = 0;
+    for (int i = 0; i < width; i++)
+    {
+        if (answer[i] != 0) length++;
+    }
+    return length;
+}
+
+int get(int* &answer)
 {
     for (int i = 0; i < width; i++)
     {
-        if (i != x && sudoku[index(i, j)])
-        {
+        if (answer[i] != 0) return answer[i];
+    }
+    return 0;
+}
 
+void checkHorizontal(int* &sudoku, int x, int j, int* &answer)  // x is probably unnecessary
+{
+    for (int i = 0; i < width; i++)
+    {
+        if (i != x && sudoku[index(i, j)] != 0)
+        {
+            cout << "CHECKED HOR: " << sudoku[index(i, j)] << endl;
+            answer[sudoku[index(i, j)]-1] = 0;
         }
     }
-    return true;
+}
+
+void checkVertical(int* &sudoku, int i, int y, int* &answer)  // y is probably unnecessary
+{
+    for (int j = 0; j < height; j++)
+    {
+        if (j != y && sudoku[index(i, j)] != 0)
+        {
+            cout << "CHECKED VER: " << sudoku[index(i, j)] << endl;
+            answer[sudoku[index(i, j)]-1] = 0;
+        }
+    }
 }
 
 
-bool checkVertical(int* &sudoku, int i, int j)
+void checkBox(int* &sudoku, int i, int j, int* &answer)
 {
-
-}
-
-
-bool checkBox(int* &sudoku, int i, int j)
-{
-
+    
 }
 
 bool checkSolved(int* &sudoku)
@@ -105,5 +186,21 @@ bool checkSolved(int* &sudoku)
         }
     }
     return true;
+}
+
+void printAnswer(int* &sudoku)
+{
+    cout << endl << "ANSWER:" << endl;
+    for (int j = 0; j < height; j++)
+    {
+        for (int i = 0; i < width; i++)
+        {
+            cout << sudoku[index(i, j)] << " ";
+            if (i != 0 && (i+1) % 3 == 0) cout << " ";
+        }
+        cout << endl;
+        if (j != 0 && (j+1) % 3 == 0) cout << endl;
+    }
+    cout << endl;
 }
 
