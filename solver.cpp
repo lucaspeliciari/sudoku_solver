@@ -95,26 +95,36 @@ int main(int argc, char* argv[])
         }
     }
 
+    printSudoku(sudoku);
+
+    cout << "Starting backtracking function..." << endl;
+
     int memoryIndex = 0;
     const int memory = 100; // remember 100 "moves"
     int* pastIndexes = new int[memory]; for (int i = 0; i < memory; i++) pastIndexes[i] = -1;
     int* pastNumbers = new int[memory]; for (int i = 0; i < memory; i++) pastNumbers[i] = -1;
     
+    cout << "Started while loop" << endl;
+    int index = 0;
     while (!solved)  // guess, with backtracking
     {
-        int index = 0;
         if (sudoku[index] == 0)
         {
+            cout << "Number at index " << index << " is 0" << endl;
             for (int num = 1; num < 10; num++)
             {
+                cout << "Trying " << num << endl;
+
                 sudoku[index] = num;
 
                 // get 2D i, j from 1D index TODO: test
                 int i = index % width-1;
                 int j = index / width-1;
 
+                // always failing horizontally, others are probably also bugged
                 if (_checkHorizontal(sudoku, j) && _checkVertical(sudoku, i) && _checkBox(sudoku, i, j))
                 {
+                    cout << "Index: " << index << " num: " << num << endl;
                     pastIndexes[memoryIndex] = index;
                     pastNumbers[memoryIndex] = num;
                     memoryIndex++;
@@ -123,27 +133,40 @@ int main(int argc, char* argv[])
                 }
                 else 
                 {
-                    if (num != 9)  // try new number
-                        continue;
-                    else  // backtrack
+                    if (num == 9)  // backtrack
                     {
-                        sudoku[index] = 0;
-                        index--;
-                        memoryIndex--;
-                        num = pastNumbers[memoryIndex];
-                        index = pastIndexes[memoryIndex];
+                        if (index > 0)
+                        {
+                            cout << "Backtracked!" << endl;
+                            sudoku[index] = 0;
+                            index--;
+                            memoryIndex--;
+                            num = pastNumbers[memoryIndex];
+                            index = pastIndexes[memoryIndex];
 
-                        pastNumbers[memoryIndex] = -1;
-                        pastIndexes[memoryIndex] = -1;
+                            pastNumbers[memoryIndex] = -1;
+                            pastIndexes[memoryIndex] = -1;
+                        }
+                        else
+                        {
+                            cout << "None worked, moving on" << endl;
+                            index++;
+                        }
+                        
                     }
+                    else continue;
                 }
             }
         }
+        else
+        {
+            cout << "Number at index " << index << " is not 0" << endl;
+            index++;
+        }
         
- 
-
-        
-        solved = checkSolved(sudoku);
+        // cout << "Checking if solved... ";
+        // solved = checkSolved(sudoku);
+        // cout << ((solved) ? "True" : "False") << endl;
     }
 
     printSudoku(sudoku);
@@ -198,10 +221,16 @@ bool _checkHorizontal(int* &sudoku, int j)
     for (int i = 0; i < width; i++)
     {
         if (numbers[sudoku[index(i, j)]-1] != 0)
+        {
             numbers[sudoku[index(i, j)]-1] = 0;
+        }
         else
+        {
+            cout << "Failed horizontally" << endl;
             return false;  // more than one of the same number
+        }
     }
+    cout << "It works horizontally" << endl;
     return true;
 }
 
@@ -211,10 +240,16 @@ bool _checkVertical(int* &sudoku, int i)
     for (int j = 0; j < height; j++)
     {
         if (numbers[sudoku[index(i, j)]-1] != 0)
+        {
             numbers[sudoku[index(i, j)]-1] = 0;
+        }
         else
+        {
+            cout << "Failed vertically" << endl;
             return false;  // more than one of the same number
+        }
     }
+    cout << "It works vertically" << endl;
     return true;
 }
 
@@ -233,15 +268,21 @@ bool _checkBox(int* &sudoku, int i, int j)  // bugged
             // if (debug) cout << "(" << i << "," << j << ") ";
 
             if (numbers[sudoku[index(i, j)]-1] != 0)
+            {
                 numbers[sudoku[index(i, j)]-1] = 0;
+            }
             else
+            {
+                cout << "Failed boxly" << endl;
                 return false;  // more than one of the same number
+            }
         }
         // if (debug) cout << endl;
     }
 
     // if (debug) cout << endl;
 
+    cout << "It works boxly" << endl;
     return true;
 }
 
@@ -249,7 +290,7 @@ bool _checkBox(int* &sudoku, int i, int j)  // bugged
 
 
 
-
+// rename these
 bool checkHorizontal(int* &sudoku, int x, int j, int* &possibleAnswers)  // x is probably unnecessary
 {
     for (int i = 0; i < width; i++)
