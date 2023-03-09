@@ -95,14 +95,51 @@ int main(int argc, char* argv[])
         }
     }
 
-    tries = 0;
-    while (!solved)  // guess with backtracking
+    int memoryIndex = 0;
+    const int memory = 100; // remember 100 "moves"
+    int* pastIndexes = new int[memory]; for (int i = 0; i < memory; i++) pastIndexes[i] = -1;
+    int* pastNumbers = new int[memory]; for (int i = 0; i < memory; i++) pastNumbers[i] = -1;
+    
+    while (!solved)  // guess, with backtracking
     {
         int index = 0;
-        for (int num = 1; num < 10; num++)
+        if (sudoku[index] == 0)
         {
+            for (int num = 1; num < 10; num++)
+            {
+                sudoku[index] = num;
 
+                // get 2D i, j from 1D index TODO: test
+                int i = index % width-1;
+                int j = index / width-1;
+
+                if (_checkHorizontal(sudoku, j) && _checkVertical(sudoku, i) && _checkBox(sudoku, i, j))
+                {
+                    pastIndexes[memoryIndex] = index;
+                    pastNumbers[memoryIndex] = num;
+                    memoryIndex++;
+                    index++;
+                    break;
+                }
+                else 
+                {
+                    if (num != 9)  // try new number
+                        continue;
+                    else  // backtrack
+                    {
+                        sudoku[index] = 0;
+                        index--;
+                        memoryIndex--;
+                        num = pastNumbers[memoryIndex];
+                        index = pastIndexes[memoryIndex];
+
+                        pastNumbers[memoryIndex] = -1;
+                        pastIndexes[memoryIndex] = -1;
+                    }
+                }
+            }
         }
+        
  
 
         
