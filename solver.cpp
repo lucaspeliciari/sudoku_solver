@@ -27,6 +27,10 @@ bool checkSolved(int* &sudoku);
 
 void printSudoku(int* &sudoku);
 
+bool _checkHorizontal(int* &sudoku, int j);
+bool _checkVertical(int* &sudoku, int i);
+bool _checkBox(int* &sudoku, int i, int j);
+
 // debug
 void printCoordSudoku(int* &sudoku); 
 void print(int* &possibleAnswers);
@@ -97,7 +101,7 @@ int main(int argc, char* argv[])
         int index = 0;
         for (int num = 1; num < 10; num++)
         {
-            
+
         }
  
 
@@ -150,6 +154,64 @@ int get(int* &possibleAnswers)
     }
     return 0;
 }
+
+bool _checkHorizontal(int* &sudoku, int j)
+{
+    int* numbers = new int[9]; for (int i = 0; i < width; i++) numbers[i] = i+1;
+    for (int i = 0; i < width; i++)
+    {
+        if (numbers[sudoku[index(i, j)]-1] != 0)
+            numbers[sudoku[index(i, j)]-1] = 0;
+        else
+            return false;  // more than one of the same number
+    }
+    return true;
+}
+
+bool _checkVertical(int* &sudoku, int i)
+{
+    int* numbers = new int[9]; for (int i = 0; i < width; i++) numbers[i] = i+1;
+    for (int j = 0; j < height; j++)
+    {
+        if (numbers[sudoku[index(i, j)]-1] != 0)
+            numbers[sudoku[index(i, j)]-1] = 0;
+        else
+            return false;  // more than one of the same number
+    }
+    return true;
+}
+
+bool _checkBox(int* &sudoku, int i, int j)  // bugged
+{
+    int boxX = i / 3;
+    int boxY = j / 3;
+
+    // if (debug) cout << "BOX X: " << boxX << " BOX Y: " << boxY << endl;
+
+    int* numbers = new int[9]; for (int i = 0; i < width; i++) numbers[i] = i+1;
+    for (int j = boxY * 3; j < boxY * 3 + 3; j++)
+    {
+        for (int i = boxX * 3; i < boxX * 3 + 3; i++)
+        {
+            // if (debug) cout << "(" << i << "," << j << ") ";
+
+            if (numbers[sudoku[index(i, j)]-1] != 0)
+                numbers[sudoku[index(i, j)]-1] = 0;
+            else
+                return false;  // more than one of the same number
+        }
+        // if (debug) cout << endl;
+    }
+
+    // if (debug) cout << endl;
+
+    return true;
+}
+
+
+
+
+
 
 bool checkHorizontal(int* &sudoku, int x, int j, int* &possibleAnswers)  // x is probably unnecessary
 {
