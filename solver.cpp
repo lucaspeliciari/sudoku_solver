@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
     reset(possibleAnswers);
 
     int tries = 0;
-    while (!solved)
+    while (tries < 10)  // place numbers without any guesses
     {
         for (int j = 0; j < height; j++)
         {
@@ -87,10 +87,24 @@ int main(int argc, char* argv[])
                 if (debug) print(possibleAnswers);
                 if (debug) printSudoku(sudoku);
             }
+            tries++;
         }
-        solved = checkSolved(sudoku);
-        tries++;
     }
+
+    tries = 0;
+    while (!solved)  // guess with backtracking
+    {
+        int index = 0;
+        for (int num = 1; num < 10; num++)
+        {
+            
+        }
+ 
+
+        
+        solved = checkSolved(sudoku);
+    }
+
     printSudoku(sudoku);
 
     return 0;
