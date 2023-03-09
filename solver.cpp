@@ -215,14 +215,16 @@ int get(int* &possibleAnswers)
     return 0;
 }
 
-bool _checkHorizontal(int* &sudoku, int j)
+bool _checkHorizontal(int* &sudoku, int j)  // VERY bugged
 {
     int* numbers = new int[9]; for (int i = 0; i < width; i++) numbers[i] = i+1;
     for (int i = 0; i < width; i++)
     {
-        if (numbers[sudoku[index(i, j)]-1] != 0)
+        cout << "Number at index " << index << " is " << sudoku[index(i, j)] << endl;
+        if (numbers[sudoku[index(i, j)]-1] != -1 && numbers[sudoku[index(i, j)]-1] != 0)
         {
-            numbers[sudoku[index(i, j)]-1] = 0;
+            cout << "Number at index " << index << " is was replaced by -1" << endl;
+            numbers[sudoku[index(i, j)]-1] = -1;
         }
         else
         {
@@ -239,9 +241,9 @@ bool _checkVertical(int* &sudoku, int i)
     int* numbers = new int[9]; for (int i = 0; i < width; i++) numbers[i] = i+1;
     for (int j = 0; j < height; j++)
     {
-        if (numbers[sudoku[index(i, j)]-1] != 0)
+        if (numbers[sudoku[index(i, j)]-1] != -1 && numbers[sudoku[index(i, j)]-1] != 0)
         {
-            numbers[sudoku[index(i, j)]-1] = 0;
+            numbers[sudoku[index(i, j)]-1] = -1;
         }
         else
         {
