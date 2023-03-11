@@ -5,7 +5,7 @@
 
 #include <iostream>
 #include <cstring>
-#include <fstream>  // for logging
+#include <fstream>
 
 
 
@@ -33,6 +33,7 @@ bool _checkVertical(int* &sudoku, int i);
 bool _checkBox(int* &sudoku, int i, int j);
 
 // debug
+void logSudoku(int* &sudoku);
 void printCoordSudoku(int* &sudoku); 
 void print(int* &possibleAnswers);
 
@@ -63,6 +64,9 @@ int main(int argc, char* argv[])
             return 3;
         }
     }
+
+    logSudoku(sudoku);
+    if (debug) printSudoku(sudoku);
 
     // printCoordSudoku(sudoku);
 
@@ -96,7 +100,8 @@ int main(int argc, char* argv[])
         }
     }
 
-    printSudoku(sudoku);
+    logSudoku(sudoku);
+    if (debug) printSudoku(sudoku);
 
     std::cout << "Starting backtracking function..." << std::endl;
 
@@ -170,8 +175,10 @@ int main(int argc, char* argv[])
         // std::cout << ((solved) ? "True" : "False") << std::endl;
     }
 
+    logSudoku(sudoku);
     printSudoku(sudoku);
-
+    
+    out.close();
     return 0;
 }
 
@@ -302,35 +309,8 @@ bool _checkBox(int* &sudoku, int i, int j)  // bugged
             }
         }
     }
+
     if (debug) std::cout << "   It works boxly!" << std::endl << std::endl;
-    return true;
-
-
-
-    /*
-    int* numbers = new int[9]; for (int i = 0; i < width; i++) numbers[i] = i+1;
-    for (int j = boxY * 3; j < boxY * 3 + 3; j++)
-    {
-        for (int i = boxX * 3; i < boxX * 3 + 3; i++)
-        {
-            // if (debug) std::cout << "(" << i << "," << j << ") ";
-
-            if (numbers[sudoku[index(i, j)]-1] != 0)
-            {
-                numbers[sudoku[index(i, j)]-1] = 0;
-            }
-            else
-            {
-                std::cout << "Failed boxly" << std::endl;
-                return false;  // more than one of the same number
-            }
-        }
-        // if (debug) std::cout << std::endl;
-    }*/
-
-    // if (debug) std::cout << std::endl;
-
-    std::cout << "It works boxly" << std::endl;
     return true;
 }
 
@@ -425,6 +405,21 @@ void printSudoku(int* &sudoku)
         std::cout << std::endl;
         if (j != 0 && (j+1) % 3 == 0) std::cout << std::endl;
     }
+}
+
+void logSudoku(int* &sudoku)
+{
+    for (int j = 0; j < height; j++)
+    {
+        for (int i = 0; i < width; i++)
+        {
+            out << sudoku[index(i, j)] << " ";
+            if (i != 0 && (i+1) % 3 == 0) out << " ";
+        }
+        out << std::endl;
+        if (j != 0 && (j+1) % 3 == 0) out << std::endl;
+    }
+    out << std::endl << std::endl;
 }
 
 void printCoordSudoku(int* &sudoku)
