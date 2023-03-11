@@ -22,16 +22,16 @@ int length(int* &possibleAnswers);
 void reset(int* &possibleAnswers);
 int get(int* &possibleAnswers);
 
-bool checkHorizontal(int* &sudoku, int i, int j, int* &possibleAnswers);
-bool checkVertical(int* &sudoku, int i, int j, int* &possibleAnswers);
-bool checkBox(int* &sudoku, int i, int j, int* &possibleAnswers);
+bool compareHorizontal(int* &sudoku, int j, int* &possibleAnswers);
+bool compareVertical(int* &sudoku, int i, int* &possibleAnswers);
+bool compareBox(int* &sudoku, int i, int j, int* &possibleAnswers);
 bool checkSolved(int* &sudoku);
 
 void printSudoku(int* &sudoku);
 
-bool _checkHorizontal(int* &sudoku, int j);
-bool _checkVertical(int* &sudoku, int i);
-bool _checkBox(int* &sudoku, int i, int j);
+bool checkHorizontal(int* &sudoku, int j);
+bool checkVertical(int* &sudoku, int i);
+bool checkBox(int* &sudoku, int i, int j);
 
 // debug
 void logSudoku(int* &sudoku, std::string title="");
@@ -87,7 +87,7 @@ int main(int argc, char* argv[])
                 reset(possibleAnswers);
                 if (sudoku[index(i, j)] == 0)
                 {
-                    if (checkHorizontal(sudoku, i, j, possibleAnswers) | checkVertical(sudoku, i, j, possibleAnswers) | checkBox(sudoku, i, j, possibleAnswers))
+                    if (compareHorizontal(sudoku, j, possibleAnswers) | compareVertical(sudoku, i, possibleAnswers) | compareBox(sudoku, i, j, possibleAnswers))
                     {
                         sudoku[index(i, j)] = get(possibleAnswers);
                         tries = 0;
@@ -129,7 +129,7 @@ int main(int argc, char* argv[])
                 int j = index / (width-1);
 
                 // always failing horizontally, others are probably also bugged
-                if (_checkHorizontal(sudoku, j) && _checkVertical(sudoku, i) && _checkBox(sudoku, i, j))
+                if (checkHorizontal(sudoku, j) && checkVertical(sudoku, i) && checkBox(sudoku, i, j))
                 {
                     if (debug) std::cout << "Index: " << index << " num: " << num << std::endl;
                     pastIndexes[memoryIndex] = index;
@@ -224,7 +224,7 @@ int get(int* &possibleAnswers)
     return 0;
 }
 
-bool _checkHorizontal(int* &sudoku, int j)  // VERY bugged
+bool checkHorizontal(int* &sudoku, int j)  // VERY bugged
 {
     int* numbers = new int[9]; for (int i = 0; i < width; i++) numbers[i] = i+1;
     for (int i = 0; i < width; i++)
@@ -251,7 +251,7 @@ bool _checkHorizontal(int* &sudoku, int j)  // VERY bugged
     return true;
 }
 
-bool _checkVertical(int* &sudoku, int i)
+bool checkVertical(int* &sudoku, int i)
 {
     int* numbers = new int[9]; for (int i = 0; i < width; i++) numbers[i] = i+1;
     for (int j = 0; j < height; j++)
@@ -278,7 +278,7 @@ bool _checkVertical(int* &sudoku, int i)
     return true;
 }
 
-bool _checkBox(int* &sudoku, int i, int j)  // bugged
+bool checkBox(int* &sudoku, int i, int j)  // bugged
 {
     int boxX = i / 3;
     int boxY = j / 3;
@@ -315,16 +315,11 @@ bool _checkBox(int* &sudoku, int i, int j)  // bugged
     return true;
 }
 
-
-
-
-
-// rename these
-bool checkHorizontal(int* &sudoku, int x, int j, int* &possibleAnswers)  // x is probably unnecessary
+bool compareHorizontal(int* &sudoku, int j, int* &possibleAnswers)
 {
     for (int i = 0; i < width; i++)
     {
-        if (i != x && sudoku[index(i, j)] != 0)
+        if (sudoku[index(i, j)] != 0)
         {
             if (debug) std::cout << "CHECKED HOR: " << sudoku[index(i, j)] << std::endl;
             possibleAnswers[sudoku[index(i, j)]-1] = 0;
@@ -336,11 +331,11 @@ bool checkHorizontal(int* &sudoku, int x, int j, int* &possibleAnswers)  // x is
     else return false;
 }
 
-bool checkVertical(int* &sudoku, int i, int y, int* &possibleAnswers)  // y is probably unnecessary
+bool compareVertical(int* &sudoku, int i, int* &possibleAnswers)
 {
     for (int j = 0; j < height; j++)
     {
-        if (j != y && sudoku[index(i, j)] != 0)
+        if (sudoku[index(i, j)] != 0)
         {
             if (debug) std::cout << "CHECKED VER: " << sudoku[index(i, j)] << std::endl;
             possibleAnswers[sudoku[index(i, j)]-1] = 0;
@@ -353,7 +348,7 @@ bool checkVertical(int* &sudoku, int i, int y, int* &possibleAnswers)  // y is p
 }
 
 
-bool checkBox(int* &sudoku, int i, int j, int* &possibleAnswers)  // bugged
+bool compareBox(int* &sudoku, int i, int j, int* &possibleAnswers)
 {
     int boxX = i / 3;
     int boxY = j / 3;
