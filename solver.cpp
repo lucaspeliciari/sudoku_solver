@@ -4,6 +4,7 @@
 
 
 #include <iostream>
+#include <string>
 #include <cstring>
 #include <fstream>
 
@@ -33,7 +34,7 @@ bool _checkVertical(int* &sudoku, int i);
 bool _checkBox(int* &sudoku, int i, int j);
 
 // debug
-void logSudoku(int* &sudoku);
+void logSudoku(int* &sudoku, std::string title="");
 void printCoordSudoku(int* &sudoku); 
 void print(int* &possibleAnswers);
 
@@ -407,8 +408,9 @@ void printSudoku(int* &sudoku)
     }
 }
 
-void logSudoku(int* &sudoku)
+void logSudoku(int* &sudoku, std::string title)
 {
+    if (title.length() > 0) out << title << std::endl;
     for (int j = 0; j < height; j++)
     {
         for (int i = 0; i < width; i++)
@@ -419,7 +421,8 @@ void logSudoku(int* &sudoku)
         out << std::endl;
         if (j != 0 && (j+1) % 3 == 0) out << std::endl;
     }
-    out << std::endl << std::endl;
+    std::string separator("-------------------");
+    out << separator << std::endl << std::endl;
 }
 
 void printCoordSudoku(int* &sudoku)
