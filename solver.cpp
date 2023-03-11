@@ -224,7 +224,7 @@ int get(int* &possibleAnswers)
     return 0;
 }
 
-bool checkHorizontal(int* &sudoku, int j)  // VERY bugged
+bool checkHorizontal(int* &sudoku, int j)
 {
     int* numbers = new int[9]; for (int i = 0; i < width; i++) numbers[i] = i+1;
     for (int i = 0; i < width; i++)
@@ -278,7 +278,7 @@ bool checkVertical(int* &sudoku, int i)
     return true;
 }
 
-bool checkBox(int* &sudoku, int i, int j)  // bugged
+bool checkBox(int* &sudoku, int i, int j)
 {
     int boxX = i / 3;
     int boxY = j / 3;
@@ -321,12 +321,9 @@ bool compareHorizontal(int* &sudoku, int j, int* &possibleAnswers)
     {
         if (sudoku[index(i, j)] != 0)
         {
-            if (debug) std::cout << "CHECKED HOR: " << sudoku[index(i, j)] << std::endl;
             possibleAnswers[sudoku[index(i, j)]-1] = 0;
         }
     }
-    if (debug) std::cout << std::endl;
-
     if (length(possibleAnswers) == 1) return true;
     else return false;
 }
@@ -337,12 +334,9 @@ bool compareVertical(int* &sudoku, int i, int* &possibleAnswers)
     {
         if (sudoku[index(i, j)] != 0)
         {
-            if (debug) std::cout << "CHECKED VER: " << sudoku[index(i, j)] << std::endl;
             possibleAnswers[sudoku[index(i, j)]-1] = 0;
         }
     }
-    if (debug) std::cout << std::endl;
-
     if (length(possibleAnswers) == 1) return true;
     else return false;
 }
@@ -353,24 +347,16 @@ bool compareBox(int* &sudoku, int i, int j, int* &possibleAnswers)
     int boxX = i / 3;
     int boxY = j / 3;
 
-    if (debug) std::cout << "BOX X: " << boxX << " BOX Y: " << boxY << std::endl;
-
     for (int j = boxY * 3; j < boxY * 3 + 3; j++)
     {
         for (int i = boxX * 3; i < boxX * 3 + 3; i++)
         {
-            if (debug) std::cout << "(" << i << "," << j << ") ";
-
             if (sudoku[index(i, j)] != 0)
             {
-                if (debug) std::cout << "CHECKED BOX: " << sudoku[index(i, j)] << std::endl;
                 possibleAnswers[sudoku[index(i, j)]-1] = 0;
             }
         }
-        if (debug) std::cout << std::endl;
     }
-
-    if (debug) std::cout << std::endl;
 
     if (length(possibleAnswers) == 1) return true;
     else return false;
