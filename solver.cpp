@@ -1,5 +1,8 @@
 /*
     SUDOKU SOLVER - 07/03/2023
+
+    Create functions to handle backtracking's memory
+        For adding and removing numbers from memory
 */
 
 
@@ -101,11 +104,11 @@ int main(int argc, char* argv[])
     solved = checkSolved(sudoku);
     std::cout << ((solved) ? "True" : "False") << std::endl;
 
-    if (solved)
+    if (solved)  // all empty spaces have been successfully filled
     {
         logSudoku(sudoku);
     }
-    else
+    else  // backtracking if necessary
     {
         logSudoku(sudoku, "PARTIAL ANSWER WITH NO GUESSES");
     
@@ -113,7 +116,7 @@ int main(int argc, char* argv[])
         std::cout << "Starting backtracking function..." << std::endl;
 
         int memoryIndex = 0;
-        const int memory = 100; // remember 100 "moves"
+        const int memory = 1000; // remember this amount of "moves"
         int* pastIndexes = new int[memory]; for (int i = 0; i < memory; i++) pastIndexes[i] = -1;
         int* pastNumbers = new int[memory]; for (int i = 0; i < memory; i++) pastNumbers[i] = -1;
         
@@ -122,6 +125,7 @@ int main(int argc, char* argv[])
         int backtrackCount = 0;
         while (!solved)  // guess, with backtracking
         {
+            std::cout << "Index is " << index << std::endl;  
             if (sudoku[index] == 0)
             {
                 if (debug) std::cout << "Number at index " << index << " is 0" << std::endl;
@@ -149,15 +153,27 @@ int main(int argc, char* argv[])
                     {
                         if (num == 9)  // backtrack
                         {
-                            if (index > 0)
+                            if (index > 0 && memoryIndex > 0)
                             {
                                 logSudoku(sudoku, "Backtrack #" + std::to_string(backtrackCount));
                                 backtrackCount++;
                                 std::cout << "Backtracked!" << std::endl;
                                 sudoku[index] = 0;
-                                index--;
-                                memoryIndex--;
+                                memoryIndex--; std::cout << memoryIndex << std::endl; // this is negative!
                                 num = pastNumbers[memoryIndex];
+
+                                // sanity checks
+                                if (pastIndexes[memoryIndex] < 0 || memoryIndex < 0)
+                                {
+                                    std::cout << "MAJOR BUG: index < 0";
+                                    return 666;
+                                }
+                                if (pastIndexes[memoryIndex] > memory-1 || memoryIndex > memory-1)
+                                {
+                                    std::cout << "Reached backtracking limit of " << memory << " moves";
+                                    return 4;
+                                }
+
                                 index = pastIndexes[memoryIndex];
 
                                 pastNumbers[memoryIndex] = -1;
@@ -166,6 +182,7 @@ int main(int argc, char* argv[])
                             else
                             {
                                 if (debug) std::cout << "None worked, moving on" << std::endl;
+                                sudoku[index] = 0;
                                 index++;
                             }
                             
@@ -178,12 +195,12 @@ int main(int argc, char* argv[])
             {
                 if (debug) std::cout << "Number at index " << index << " is not 0" << std::endl;
                 index++;
+                continue;
             }
             
             std::cout << "Solved... ";
             solved = checkSolved(sudoku);
             std::cout << ((solved) ? "True" : "False") << std::endl;
-            std::cout << "Index is " << index << std::endl;  // program ends when index = 268475675
         }
     }
 
