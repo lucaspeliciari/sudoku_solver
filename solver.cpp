@@ -67,7 +67,6 @@ int main(int argc, char* argv[])
     }
 
     logSudoku(sudoku);
-    if (debug) printSudoku(sudoku);
 
     // printCoordSudoku(sudoku);
 
@@ -82,8 +81,6 @@ int main(int argc, char* argv[])
         {
             for (int i = 0; i < width; i++)
             {
-                if (debug) std::cout << std::endl << "i: " << i << " j:" << j << std::endl;
-
                 reset(possibleAnswers);
                 if (sudoku[index(i, j)] == 0)
                 {
@@ -93,90 +90,106 @@ int main(int argc, char* argv[])
                         tries = 0;
                     }
                 }
-                
-                if (debug) print(possibleAnswers);
-                if (debug) printSudoku(sudoku);
             }
             tries++;
         }
     }
 
-    logSudoku(sudoku);
-    if (debug) printSudoku(sudoku);
-
-    std::cout << "Starting backtracking function..." << std::endl;
-
-    int memoryIndex = 0;
-    const int memory = 100; // remember 100 "moves"
-    int* pastIndexes = new int[memory]; for (int i = 0; i < memory; i++) pastIndexes[i] = -1;
-    int* pastNumbers = new int[memory]; for (int i = 0; i < memory; i++) pastNumbers[i] = -1;
     
-    std::cout << "Started second while loop" << std::endl;
-    int index = 0;
-    while (!solved)  // guess, with backtracking
+
+    std::cout << "Solved... ";
+    solved = checkSolved(sudoku);
+    std::cout << ((solved) ? "True" : "False") << std::endl;
+
+    if (solved)
     {
-        if (sudoku[index] == 0)
+        logSudoku(sudoku);
+    }
+    else
+    {
+        logSudoku(sudoku, "PARTIAL ANSWER WITH NO GUESSES");
+    
+
+        std::cout << "Starting backtracking function..." << std::endl;
+
+        int memoryIndex = 0;
+        const int memory = 100; // remember 100 "moves"
+        int* pastIndexes = new int[memory]; for (int i = 0; i < memory; i++) pastIndexes[i] = -1;
+        int* pastNumbers = new int[memory]; for (int i = 0; i < memory; i++) pastNumbers[i] = -1;
+        
+        std::cout << "Started second while loop" << std::endl;
+        int index = 0;
+        int backtrackCount = 0;
+        while (!solved)  // guess, with backtracking
         {
-            if (debug) std::cout << "Number at index " << index << " is 0" << std::endl;
-            for (int num = 1; num < 10; num++)
+            if (sudoku[index] == 0)
             {
-                if (debug) std::cout << "Trying " << num << std::endl;
-
-                sudoku[index] = num;
-
-                // get 2D i, j from 1D index TODO: test
-                int i = index % (width-1);
-                int j = index / (width-1);
-
-                // always failing horizontally, others are probably also bugged
-                if (checkHorizontal(sudoku, j) && checkVertical(sudoku, i) && checkBox(sudoku, i, j))
+                if (debug) std::cout << "Number at index " << index << " is 0" << std::endl;
+                for (int num = 1; num < 10; num++)
                 {
-                    if (debug) std::cout << "Index: " << index << " num: " << num << std::endl;
-                    pastIndexes[memoryIndex] = index;
-                    pastNumbers[memoryIndex] = num;
-                    memoryIndex++;
-                    index++;
-                    break;
-                }
-                else 
-                {
-                    if (num == 9)  // backtrack
+                    if (debug) std::cout << "Trying " << num << std::endl;
+
+                    sudoku[index] = num;
+
+                    // get 2D i, j from 1D index TODO: test
+                    int i = index % (width-1);
+                    int j = index / (width-1);
+
+                    // always failing horizontally, others are probably also bugged
+                    if (checkHorizontal(sudoku, j) && checkVertical(sudoku, i) && checkBox(sudoku, i, j))
                     {
-                        if (index > 0)
-                        {
-                            if (debug) std::cout << "Backtracked!" << std::endl;  // segmentation fault apparently
-                            sudoku[index] = 0;
-                            index--;
-                            memoryIndex--;
-                            num = pastNumbers[memoryIndex];
-                            index = pastIndexes[memoryIndex];
-
-                            pastNumbers[memoryIndex] = -1;
-                            pastIndexes[memoryIndex] = -1;
-                        }
-                        else
-                        {
-                            if (debug) std::cout << "None worked, moving on" << std::endl;
-                            index++;
-                        }
-                        
+                        if (debug) std::cout << "Index: " << index << " num: " << num << std::endl;
+                        pastIndexes[memoryIndex] = index;
+                        pastNumbers[memoryIndex] = num;
+                        memoryIndex++;
+                        index++;
+                        break;
                     }
-                    else continue;
+                    else 
+                    {
+                        if (num == 9)  // backtrack
+                        {
+                            if (index > 0)
+                            {
+                                logSudoku(sudoku, "Backtrack #" + std::to_string(backtrackCount));
+                                backtrackCount++;
+                                std::cout << "Backtracked!" << std::endl;
+                                sudoku[index] = 0;
+                                index--;
+                                memoryIndex--;
+                                num = pastNumbers[memoryIndex];
+                                index = pastIndexes[memoryIndex];
+
+                                pastNumbers[memoryIndex] = -1;
+                                pastIndexes[memoryIndex] = -1;
+                            }
+                            else
+                            {
+                                if (debug) std::cout << "None worked, moving on" << std::endl;
+                                index++;
+                            }
+                            
+                        }
+                        else continue;
+                    }
                 }
             }
+            else
+            {
+                if (debug) std::cout << "Number at index " << index << " is not 0" << std::endl;
+                index++;
+            }
+            
+            std::cout << "Solved... ";
+            solved = checkSolved(sudoku);
+            std::cout << ((solved) ? "True" : "False") << std::endl;
+            std::cout << "Index is " << index << std::endl;  // program ends when index = 268475675
         }
-        else
-        {
-            if (debug) std::cout << "Number at index " << index << " is not 0" << std::endl;
-            index++;
-        }
-        
-        // std::cout << "Checking if solved... ";
-        // solved = checkSolved(sudoku);
-        // std::cout << ((solved) ? "True" : "False") << std::endl;
     }
 
-    logSudoku(sudoku);
+    std::cout << std::endl << "Script over" << std::endl;
+
+    logSudoku(sudoku, "FINAL ANSWER");
     printSudoku(sudoku);
     
     out.close();
