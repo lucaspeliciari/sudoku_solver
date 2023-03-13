@@ -1,8 +1,5 @@
 /*
     SUDOKU SOLVER - 07/03/2023
-
-    Create functions to handle backtracking's memory
-        For adding and removing numbers from memory
 */
 
 
