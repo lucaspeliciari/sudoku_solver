@@ -8,7 +8,7 @@
 #include <cstring>
 #include "checks.cpp"
 #include "logger.cpp"
-#include "printer.cpp"
+// #include "printer.cpp"
 
 
 const int width = 9;
@@ -19,8 +19,6 @@ bool solved = false;
 bool logging = false;
 
 
-int index(int i, int j);
-
 int length(int* &possibleAnswers);
 void reset(int* &possibleAnswers);
 int get(int* &possibleAnswers);
@@ -30,10 +28,6 @@ bool compareVertical(int* &sudoku, int i, int* &possibleAnswers);
 bool compareBox(int* &sudoku, int i, int j, int* &possibleAnswers);
 bool checkSolved(int* &sudoku);
 
-void printSudoku(int* &sudoku);
-
-// debug
-void printCoordSudoku(int* &sudoku); 
 
 void handleInput(int argc, char* argv[])
 {
@@ -80,21 +74,25 @@ int main(int argc, char* argv[])
         {
             for (int i = 0; i < width; i++)
             {
+                if (sudoku[i][j] != 0) continue;
+
                 reset(possibleAnswers);  // TODO can probably merge all 3 check functions
                 if (checkHorizontal(sudoku, j, possibleAnswers) && checkVertical(sudoku, i, possibleAnswers) && checkBox(sudoku, i, j, possibleAnswers))
+                {
                     if (length(possibleAnswers) == 1)
                     {
-                        cout << "YAY!" << endl;
                         sudoku[i][j] = get(possibleAnswers);
                         log(sudoku);
+                        // printSudoku(sudoku);
                     }
-                    else cout << length(possibleAnswers);
+                }
             }
-            tries++;
         }
+        tries++;
     }
-/*
-    std::cout << "Solved... ";
+
+
+/*    std::cout << "Solved... ";
     solved = checkSolved(sudoku);
     std::cout << ((solved) ? "True" : "False") << std::endl;
 
@@ -205,18 +203,10 @@ int main(int argc, char* argv[])
     
     */
 
-   endLog();
+    endLog();
     return 0;
 }
 
-
-
-
-int index(int i, int j)
-{
-    int index = i + j * height;
-    return index;
-}
 
 void reset(int* &possibleAnswers)
 {
@@ -225,11 +215,16 @@ void reset(int* &possibleAnswers)
 
 int length(int* &possibleAnswers)
 {
+    // for (int i = 0; i < 9; i++) cout << possibleAnswers[i] << " ";
+    // cout << endl;
+    
     int length = 0;
     for (int i = 0; i < width; i++)
     {
-        if (possibleAnswers[i] != 0) length++;
+        // cout << possibleAnswers[i] << " ";
+        if (possibleAnswers[i] != -1) length++;
     }
+    // cout << endl << length << endl;
     return length;
 }
 
@@ -237,12 +232,12 @@ int get(int* &possibleAnswers)
 {
     for (int i = 0; i < width; i++)
     {
-        if (possibleAnswers[i] != 0) return possibleAnswers[i];
+        if (possibleAnswers[i] != -1) return possibleAnswers[i];
     }
     return 0;
 }
 
-bool compareHorizontal(int* &sudoku, int j, int* &possibleAnswers)
+/*bool compareHorizontal(int* &sudoku, int j, int* &possibleAnswers)
 {
     for (int i = 0; i < width; i++)
     {
@@ -287,16 +282,4 @@ bool compareBox(int* &sudoku, int i, int j, int* &possibleAnswers)
 
     if (length(possibleAnswers) == 1) return true;
     else return false;
-}
-
-// bool checkSolved(int* &sudoku)
-// {
-//     for (int j = 0; j < height; j++)
-//     {
-//         for (int i = 0; i < width; i++)
-//         {
-//             if (sudoku[index(i, j)] == 0) return false;
-//         }
-//     }
-//     return true;
-// }
+}*/
