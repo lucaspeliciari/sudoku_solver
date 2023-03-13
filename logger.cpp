@@ -7,28 +7,30 @@
 
 std::ofstream file("log.txt");
 
-void log(int sudoku[9][9], std::string title="")  // TODO support variable width and height
+// TODO support variable width and height
+void log(int sudoku[9][9], std::string title="")
 {
-    int width = sizeof sudoku / sizeof sudoku[0];
-    int height = sizeof sudoku / sizeof(int);
+    int width = sizeof(sudoku[0]) / sizeof(sudoku[0][0]);
+    int height = 9;  // TODO try to do it dynamically, something similar to "sizeof(sudoku) / sizeof(sudoku[0])"
 
-    
     if (title.length() > 0) file << title << std::endl;
     for (int j = 0; j < height; j++)
     {
         for (int i = 0; i < width; i++)
         {
-            file << sudoku[i, j] << " ";
+            file << sudoku[i][j] << " ";
             if (i != 0 && (i+1) % 3 == 0) file << " ";
         }
         file << std::endl;
         if (j != 0 && (j+1) % 3 == 0) file << std::endl;
     }
     std::string separator("-------------------");
-    file << separator << std::endl << std::endl;
+    file << separator << std::endl;
 }
 
-void finish()
+void endLog()
 {
+    std::string separator("-------------------");
+    file << separator;
     file.close();
 }

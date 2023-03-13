@@ -72,8 +72,7 @@ int main(int argc, char* argv[])
 {
     handleInput(argc, argv);
 
-    log(sudoku);
-    // printSudoku(sudoku);
+    log(sudoku, "ORIGINAL");
 
     /*bool solved = false;
     int* possibleAnswers = new int[9];
@@ -210,6 +209,8 @@ int main(int argc, char* argv[])
     // printSudoku(sudoku);
     
     */
+
+   endLog();
     return 0;
 }
 

@@ -11,8 +11,8 @@ using namespace std;
 // print entire puzzle
 void printSudoku(int sudoku[9][9]) 
 {
-    int width = sizeof sudoku / sizeof sudoku[0];
-    int height = sizeof sudoku / sizeof(int);
+    int width = sizeof(sudoku[0]) / sizeof(sudoku[0][0]);
+    int height = 9;  // TODO try to do it dynamically, something similar to "sizeof(sudoku) / sizeof(sudoku[0])"
 
     std::cout << std::endl << "ANSWER:" << std::endl;
     for (int j = 0; j < height; j++)

@@ -2,10 +2,10 @@
     Functions that check lines or boxes for repeat numbers
 */
 
-bool checkSolved(int* &sudoku)
+bool checkSolved(int sudoku[9][9])
 {
-    int width = sizeof sudoku / sizeof sudoku[0];
-    int height = sizeof sudoku / sizeof(int);
+    int width = sizeof(sudoku[0]) / sizeof(sudoku[0][0]);
+    int height = 9;  // TODO try to do it dynamically, something similar to "sizeof(sudoku) / sizeof(sudoku[0])"
     
     for (int j = 0; j < height; j++)
     {
@@ -16,11 +16,11 @@ bool checkSolved(int* &sudoku)
     }
     return true;
 }
-
-bool checkHorizontal(int* &sudoku, int j)
+/*
+bool checkHorizontal(int sudoku[9][9], int j)
 {
-    int width = sizeof sudoku / sizeof sudoku[0];
-    int height = sizeof sudoku / sizeof(int);
+    int width = sizeof(sudoku[0]) / sizeof(sudoku[0][0]);
+    int height = 9;  // TODO try to do it dynamically, something similar to "sizeof(sudoku) / sizeof(sudoku[0])"
 
     int* numbers = new int[9]; for (int i = 0; i < width; i++) numbers[i] = i+1;
     for (int i = 0; i < width; i++)
@@ -47,10 +47,10 @@ bool checkHorizontal(int* &sudoku, int j)
     return true;
 }
 
-bool checkVertical(int* &sudoku, int i)
+bool checkVertical(int sudoku[9][9], int i)
 {
-    int width = sizeof sudoku / sizeof sudoku[0];
-    int height = sizeof sudoku / sizeof(int);
+    int width = sizeof(sudoku[0]) / sizeof(sudoku[0][0]);
+    int height = 9;  // TODO try to do it dynamically, something similar to "sizeof(sudoku) / sizeof(sudoku[0])"
 
     int* numbers = new int[9]; for (int i = 0; i < width; i++) numbers[i] = i+1;
     for (int j = 0; j < height; j++)
@@ -77,10 +77,10 @@ bool checkVertical(int* &sudoku, int i)
     return true;
 }
 
-bool checkBox(int* &sudoku, int i, int j)
+bool checkBox(int sudoku[9][9], int i, int j)
 {
-    int width = sizeof sudoku / sizeof sudoku[0];
-    int height = sizeof sudoku / sizeof(int);
+    int width = sizeof(sudoku[0]) / sizeof(sudoku[0][0]);
+    int height = 9;  // TODO try to do it dynamically, something similar to "sizeof(sudoku) / sizeof(sudoku[0])"
 
     int boxX = i / 3;
     int boxY = j / 3;
@@ -116,3 +116,4 @@ bool checkBox(int* &sudoku, int i, int j)
     // if (debug) std::cout << "   It works boxly!" << std::endl << std::endl;
     return true;
 }
+*/
