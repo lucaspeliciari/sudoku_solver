@@ -9,7 +9,7 @@ using namespace std;
 
 
 // print entire puzzle
-void printSudoku(int* &sudoku)
+void printSudoku(int sudoku[9][9]) 
 {
     std::cout << std::endl << "ANSWER:" << std::endl;
     for (int j = 0; j < height; j++)
@@ -24,10 +24,8 @@ void printSudoku(int* &sudoku)
     }
 }
 
-
-
 // print coordinates to help with debugging
-void printCoordSudoku(int* &sudoku)
+void printCoordinatess()
 {
     std::cout << std::endl << "ANSWER:" << std::endl;
     for (int j = 0; j < height; j++)
