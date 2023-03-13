@@ -15,6 +15,7 @@ const int width = 9;
 const int height = 9;
 int sudoku[width][height];
 int maxTries = 10;
+bool solved = false;
 bool logging = false;
 
 
@@ -73,10 +74,8 @@ int main(int argc, char* argv[])
     handleInput(argc, argv);
 
     log(sudoku, "ORIGINAL");
-
-    /*bool solved = false;
+    
     int* possibleAnswers = new int[9];
-    reset(possibleAnswers);
 
     int tries = 0;
     while (tries < maxTries)  // place numbers without any guesses
@@ -86,19 +85,12 @@ int main(int argc, char* argv[])
             for (int i = 0; i < width; i++)
             {
                 reset(possibleAnswers);
-                if (sudoku[index(i, j)] == 0)
-                {
-                    if (compareHorizontal(sudoku, j, possibleAnswers) | compareVertical(sudoku, i, possibleAnswers) | compareBox(sudoku, i, j, possibleAnswers))
-                    {
-                        sudoku[index(i, j)] = get(possibleAnswers);
-                        tries = 0;
-                    }
-                }
+                checkHorizontal(sudoku, j, possibleAnswers);
             }
             tries++;
         }
     }
-
+/*
     std::cout << "Solved... ";
     solved = checkSolved(sudoku);
     std::cout << ((solved) ? "True" : "False") << std::endl;

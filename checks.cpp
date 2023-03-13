@@ -16,37 +16,29 @@ bool checkSolved(int sudoku[9][9])
     }
     return true;
 }
-/*
-bool checkHorizontal(int sudoku[9][9], int j)
+
+bool checkHorizontal(int sudoku[9][9], int j, int possibleAnswer[9])  // TODO check if this needs dereferencing (&)
 {
     int width = sizeof(sudoku[0]) / sizeof(sudoku[0][0]);
     int height = 9;  // TODO try to do it dynamically, something similar to "sizeof(sudoku) / sizeof(sudoku[0])"
 
-    int* numbers = new int[9]; for (int i = 0; i < width; i++) numbers[i] = i+1;
     for (int i = 0; i < width; i++)
     {
-        // if (debug) 
-        // {
-        //     for (int indice = 0; indice < 9; indice++) 
-        //         std::cout << numbers[indice] << ", "; 
-        //     std::cout << std::endl;
-        // }
+        if (sudoku[i][j] == 0)
+        {
+            continue;
+        }
+        else // TODO test this new if
+        {
+            if (possibleAnswer[sudoku[i][j]-1] != -1) possibleAnswer[sudoku[i][j]-1] = -1;
+            else return false;
+        }
         
-        // if (debug) std::cout << "Number at index (" << i << ", " << j << ") is " << sudoku[index(i, j)] << std::endl;
-        if (sudoku[(i, j)] != 0 && numbers[sudoku[(i, j)]-1] != -1)
-        {
-            numbers[sudoku[(i, j)]-1] = -1;
-        }
-        else if (sudoku[(i, j)] != 0 && numbers[sudoku[(i, j)]-1] == -1)
-        {
-            // if (debug) std::cout << "   Failed horizontally!" << std::endl << std::endl;
-            return false;
-        }
     }
-    // if (debug) std::cout << "   It works horizontally!" << std::endl << std::endl;
     return true;
 }
 
+/*
 bool checkVertical(int sudoku[9][9], int i)
 {
     int width = sizeof(sudoku[0]) / sizeof(sudoku[0][0]);
