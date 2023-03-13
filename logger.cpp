@@ -7,7 +7,7 @@
 
 std::ofstream file("log.txt");
 
-void log(int sudoku[9][9], std::string title)  // TODO support variable width and height
+void log(int sudoku[9][9], std::string title="")  // TODO support variable width and height
 {
     int width = sizeof sudoku / sizeof sudoku[0];
     int height = sizeof sudoku / sizeof(int);
