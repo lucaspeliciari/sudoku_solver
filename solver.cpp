@@ -23,10 +23,10 @@ int length(int* &possibleAnswers);
 void reset(int* &possibleAnswers);
 int get(int* &possibleAnswers);
 
-bool compareHorizontal(int* &sudoku, int j, int* &possibleAnswers);
-bool compareVertical(int* &sudoku, int i, int* &possibleAnswers);
-bool compareBox(int* &sudoku, int i, int j, int* &possibleAnswers);
-bool checkSolved(int* &sudoku);
+// bool compareHorizontal(int* &sudoku, int j, int* &possibleAnswers);
+// bool compareVertical(int* &sudoku, int i, int* &possibleAnswers);
+// bool compareBox(int* &sudoku, int i, int j, int* &possibleAnswers);
+// bool checkSolved(int* &sudoku);
 
 
 void handleInput(int argc, char* argv[])
@@ -40,8 +40,6 @@ void handleInput(int argc, char* argv[])
         exit;  // TODO replace with "return 1;"
     }
 
-    std::cout << "Starting to get data" << std::endl;  // TODO remove this later
-    
     for (int j = 0; j < height; j++)  
     {
         for (int i = 0; i < width; i++)
@@ -55,8 +53,6 @@ void handleInput(int argc, char* argv[])
             }
         }
     }
-
-    std::cout << "Finished getting data" << std::endl;  // TODO remove this later
 }
 
 int main(int argc, char* argv[])
@@ -83,7 +79,6 @@ int main(int argc, char* argv[])
                     {
                         sudoku[i][j] = get(possibleAnswers);
                         log(sudoku);
-                        // printSudoku(sudoku);
                     }
                 }
             }
@@ -197,13 +192,11 @@ int main(int argc, char* argv[])
     }
 
     std::cout << std::endl << "Script over" << std::endl;
-
-    // logSudoku(sudoku, "FINAL ANSWER");
-    // printSudoku(sudoku);
-    
     */
 
+    log(sudoku, "ANSWER");
     endLog();
+    cout << "END" << endl;
     return 0;
 }
 
@@ -215,25 +208,18 @@ void reset(int* &possibleAnswers)
 
 int length(int* &possibleAnswers)
 {
-    // for (int i = 0; i < 9; i++) cout << possibleAnswers[i] << " ";
-    // cout << endl;
-    
     int length = 0;
-    for (int i = 0; i < width; i++)
-    {
-        // cout << possibleAnswers[i] << " ";
-        if (possibleAnswers[i] != -1) length++;
-    }
-    // cout << endl << length << endl;
+    for (int i = 0; i < width; i++) 
+        if (possibleAnswers[i] != -1) 
+            length++;
     return length;
 }
 
 int get(int* &possibleAnswers)
 {
-    for (int i = 0; i < width; i++)
-    {
-        if (possibleAnswers[i] != -1) return possibleAnswers[i];
-    }
+    for (int i = 0; i < width; i++) 
+        if (possibleAnswers[i] != -1) 
+            return possibleAnswers[i];
     return 0;
 }
 

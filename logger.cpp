@@ -26,7 +26,7 @@ void log(int sudoku[9][9], std::string title="")
         if (j != 0 && (j+1) % 3 == 0) file << std::endl;
     }
     std::string separator("-------------------");
-    file << separator << std::endl;
+    file << separator << std::endl << std::endl;
 }
 
 void endLog()
