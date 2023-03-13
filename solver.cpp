@@ -32,10 +32,6 @@ bool checkSolved(int* &sudoku);
 
 void printSudoku(int* &sudoku);
 
-bool checkHorizontal(int* &sudoku, int j);
-bool checkVertical(int* &sudoku, int i);
-bool checkBox(int* &sudoku, int i, int j);
-
 // debug
 void printCoordSudoku(int* &sudoku); 
 
@@ -84,8 +80,15 @@ int main(int argc, char* argv[])
         {
             for (int i = 0; i < width; i++)
             {
-                reset(possibleAnswers);
-                checkHorizontal(sudoku, j, possibleAnswers);
+                reset(possibleAnswers);  // TODO can probably merge all 3 check functions
+                if (checkHorizontal(sudoku, j, possibleAnswers) && checkVertical(sudoku, i, possibleAnswers) && checkBox(sudoku, i, j, possibleAnswers))
+                    if (length(possibleAnswers) == 1)
+                    {
+                        cout << "YAY!" << endl;
+                        sudoku[i][j] = get(possibleAnswers);
+                        log(sudoku);
+                    }
+                    else cout << length(possibleAnswers);
             }
             tries++;
         }
@@ -238,97 +241,6 @@ int get(int* &possibleAnswers)
     }
     return 0;
 }
-
-// bool checkHorizontal(int* &sudoku, int j)
-// {
-//     int* numbers = new int[9]; for (int i = 0; i < width; i++) numbers[i] = i+1;
-//     for (int i = 0; i < width; i++)
-//     {
-//         if (debug) 
-//         {
-//             for (int indice = 0; indice < 9; indice++) 
-//                 std::cout << numbers[indice] << ", "; 
-//             std::cout << std::endl;
-//         }
-        
-//         if (debug) std::cout << "Number at index (" << i << ", " << j << ") is " << sudoku[index(i, j)] << std::endl;
-//         if (sudoku[index(i, j)] != 0 && numbers[sudoku[index(i, j)]-1] != -1)
-//         {
-//             numbers[sudoku[index(i, j)]-1] = -1;
-//         }
-//         else if (sudoku[index(i, j)] != 0 && numbers[sudoku[index(i, j)]-1] == -1)
-//         {
-//             if (debug) std::cout << "   Failed horizontally!" << std::endl << std::endl;
-//             return false;
-//         }
-//     }
-//     if (debug) std::cout << "   It works horizontally!" << std::endl << std::endl;
-//     return true;
-// }
-
-// bool checkVertical(int* &sudoku, int i)
-// {
-//     int* numbers = new int[9]; for (int i = 0; i < width; i++) numbers[i] = i+1;
-//     for (int j = 0; j < height; j++)
-//     {
-//         if (debug) 
-//         {
-//             for (int indice = 0; indice < 9; indice++) 
-//                 std::cout << numbers[indice] << ", "; 
-//             std::cout << std::endl;
-//         }
-        
-//         if (debug) std::cout << "Number at index (" << i << ", " << j << ") is " << sudoku[index(i, j)] << std::endl;
-//         if (sudoku[index(i, j)] != 0 && numbers[sudoku[index(i, j)]-1] != -1)
-//         {
-//             numbers[sudoku[index(i, j)]-1] = -1;
-//         }
-//         else if (sudoku[index(i, j)] != 0 && numbers[sudoku[index(i, j)]-1] == -1)
-//         {
-//             if (debug) std::cout << "   Failed vertically!" << std::endl << std::endl;
-//             return false;
-//         }
-//     }
-//     if (debug) std::cout << "   It works vertically!" << std::endl << std::endl;
-//     return true;
-// }
-
-// bool checkBox(int* &sudoku, int i, int j)
-// {
-//     int boxX = i / 3;
-//     int boxY = j / 3;
-
-//     // if (debug) std::cout << "BOX X: " << boxX << " BOX Y: " << boxY << std::endl;
-//     if (debug) std::cout << "BOX X: " << boxX << " BOX Y: " << boxY << std::endl;
-
-//     int* numbers = new int[9]; for (int i = 0; i < width; i++) numbers[i] = i+1;
-//     for (int j = boxY * 3; j < boxY * 3 + 3; j++)
-//     {
-//         for (int i = boxX * 3; i < boxX * 3 + 3; i++)
-//         {
-//             if (debug) 
-//             {
-//                 for (int indice = 0; indice < 9; indice++) 
-//                     std::cout << numbers[indice] << ", "; 
-//                 std::cout << std::endl;
-//             }
-            
-//             if (debug) std::cout << "Number at index (" << i << ", " << j << ") is " << sudoku[index(i, j)] << std::endl;
-//             if (sudoku[index(i, j)] != 0 && numbers[sudoku[index(i, j)]-1] != -1)
-//             {
-//                 numbers[sudoku[index(i, j)]-1] = -1;
-//             }
-//             else if (sudoku[index(i, j)] != 0 && numbers[sudoku[index(i, j)]-1] == -1)
-//             {
-//                 if (debug) std::cout << "   Failed boxly!" << std::endl << std::endl;
-//                 return false;
-//             }
-//         }
-//     }
-
-//     if (debug) std::cout << "   It works boxly!" << std::endl << std::endl;
-//     return true;
-// }
 
 bool compareHorizontal(int* &sudoku, int j, int* &possibleAnswers)
 {
