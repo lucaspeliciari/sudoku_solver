@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
             {
                 if (sudoku[i][j] != 0) continue;
 
-                reset(possibleAnswers);  // TODO can probably merge all 3 check functions
+                reset(possibleAnswers);
                 checkHorizontal(sudoku, j, possibleAnswers); checkVertical(sudoku, i, possibleAnswers); checkBox(sudoku, i, j, possibleAnswers);
                 if (length(possibleAnswers) == 1)
                 {
@@ -88,7 +88,6 @@ int main(int argc, char* argv[])
         int memoryIndex = 0;
         const int memory = 1000; // remember this amount of "moves"
         int* pastIndexes = new int[memory]; for (int i = 0; i < memory; i++) pastIndexes[i] = -1;
-        // int* pastNumbers = new int[memory]; for (int i = 0; i < memory; i++) pastNumbers[i] = 0;
         
         while (!solved)
         {
@@ -96,8 +95,6 @@ int main(int argc, char* argv[])
             {
                 for (int i = 0; i < width; i++)
                 {
-                    // TODO test all this
-
                     if (!checkHorizontal(sudoku, j, possibleAnswers) || 
                         !checkVertical(sudoku, i, possibleAnswers) || 
                         !checkBox(sudoku, i, j, possibleAnswers))

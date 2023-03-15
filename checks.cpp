@@ -1,5 +1,6 @@
 /*
     Functions that check lines or boxes for repeat numbers
+    TODO can probably merge all 3 check functions, with maxI and maxJ as arguments
 */
 
 
