@@ -1,5 +1,6 @@
 /*
     SUDOKU SOLVER - 07/03/2023
+    TODO only log to txt if -l is present
 */
 
 
@@ -81,7 +82,7 @@ int main(int argc, char* argv[])
     solved = checkSolved(sudoku);
     std::cout << (solved ? "True" : "False") << std::endl;
 
-    if (!solved)
+    if (!solved)  // with guesses (backtracking)
     {
         logger(sudoku, "PARTIAL ANSWER");
 
