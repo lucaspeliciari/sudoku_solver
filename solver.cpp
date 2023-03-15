@@ -94,8 +94,9 @@ int main(int argc, char* argv[])
         {
             for (int j = 0; j < height; j++)
             {
-                for (int i = 0; i < width; i++)
+                for (int i = 0; i < width; i++)  // TODO make this work, it is very wrong
                 {
+                    reset(possibleAnswers);
                     if (!checkHorizontal(sudoku, j, possibleAnswers) || 
                         !checkVertical(sudoku, i, possibleAnswers) || 
                         !checkBox(sudoku, i, j, possibleAnswers))
@@ -105,6 +106,9 @@ int main(int argc, char* argv[])
                         if (sudoku[i][j] < 9)
                         {
                             sudoku[i][j] = sudoku[i][j] + 1;
+                            memoryIndex++;
+                            string backtrackIndexString = "Added 1 to i:" + to_string(i) + " j:" + to_string(j);
+                            logger(sudoku, backtrackIndexString);
                         }
                         else
                         {
@@ -113,16 +117,18 @@ int main(int argc, char* argv[])
                             memoryIndex--;
                             i = memoryIndex % width;  
                             j = memoryIndex / width;
+                            string backtrackIndexString = "Returned to i:" + to_string(i) + " j:" + to_string(j);
+                            logger(sudoku, backtrackIndexString);
                         }
                     }
                     else if (sudoku[i][j] == 0)
                     {
                         sudoku[i][j] = 1;
                         pastIndexes[memoryIndex] = i + j * width;
+                        memoryIndex++;
+                        string backtrackIndexString = "Found 0 and added 1 to it";
+                        logger(sudoku, backtrackIndexString);
                     }
-
-                    string backtrackIndexString = "Backtracking  i:" + to_string(i) + " j:" + to_string(j);
-                    logger(sudoku, backtrackIndexString);
                 }
             }
 
