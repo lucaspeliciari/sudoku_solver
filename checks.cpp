@@ -3,23 +3,10 @@
 */
 
 
-bool checkSolved(int sudoku[9][9])
+bool checkHorizontal(int (*sudoku)[9], int j, int* &possibleAnswer, int setNumber = 0)
 {
-    int width = sizeof(sudoku[0]) / sizeof(sudoku[0][0]);
-    int height = 9;  // TODO try to do it dynamically, something similar to "sizeof(sudoku) / sizeof(sudoku[0])"
-    
-    for (int j = 0; j < height; j++)
-    {
-        for (int i = 0; i < width; i++)
-        {
-            if (sudoku[i][j] == 0) return false;
-        }
-    }
-    return true;
-}
+    bool isValid = true;
 
-bool checkHorizontal(int (*sudoku)[9], int j, int* &possibleAnswer, int setNumber = 0)  // TODO check if this needs dereferencing (&)
-{
     int width = sizeof(sudoku[0]) / sizeof(sudoku[0][0]);
     int height = 9;  // TODO try to do it dynamically, something similar to "sizeof(sudoku) / sizeof(sudoku[0])"
 
@@ -31,18 +18,23 @@ bool checkHorizontal(int (*sudoku)[9], int j, int* &possibleAnswer, int setNumbe
         {
             continue;
         }
-        else // TODO test this new if
+        else
         {
             if (possibleAnswer[sudoku[i][j]-1] != -1) possibleAnswer[sudoku[i][j]-1] = -1;
+            else if (possibleAnswer[sudoku[i][j]-1] == -1) 
+            {
+                isValid = false;
+            }
         }
         
     }
-    return true;
+    return isValid;
 }
-
 
 bool checkVertical(int (*sudoku)[9], int i, int* &possibleAnswer, int setNumber = 0)
 {
+    bool isValid = true;
+
     int width = sizeof(sudoku[0]) / sizeof(sudoku[0][0]);
     int height = 9;  // TODO try to do it dynamically, something similar to "sizeof(sudoku) / sizeof(sudoku[0])"
 
@@ -54,17 +46,23 @@ bool checkVertical(int (*sudoku)[9], int i, int* &possibleAnswer, int setNumber 
         {
             continue;
         }
-        else // TODO test this new if
+        else
         {
             if (possibleAnswer[sudoku[i][j]-1] != -1) possibleAnswer[sudoku[i][j]-1] = -1;
+            else if (possibleAnswer[sudoku[i][j]-1] == -1) 
+            {
+                isValid = false;
+            }
         }
         
     }
-    return true;
+    return isValid;
 }
 
 bool checkBox(int (*sudoku)[9], int i, int j, int* &possibleAnswer, int setNumber = 0)
 {
+    bool isValid = true;
+
     int width = sizeof(sudoku[0]) / sizeof(sudoku[0][0]);
     int height = 9;  // TODO try to do it dynamically, something similar to "sizeof(sudoku) / sizeof(sudoku[0])"
 
@@ -81,12 +79,61 @@ bool checkBox(int (*sudoku)[9], int i, int j, int* &possibleAnswer, int setNumbe
             {
                 continue;
             }
-            else // TODO test this new if
+            else
             {
                 if (possibleAnswer[sudoku[i][j]-1] != -1) possibleAnswer[sudoku[i][j]-1] = -1;
+                else if (possibleAnswer[sudoku[i][j]-1] == -1) 
+                {
+                    isValid = false;
+                }
             }
+        }
+    }
+    return isValid;
+}
+
+bool checkSolved(int sudoku[9][9])  // TODO does not work
+{
+    int width = sizeof(sudoku[0]) / sizeof(sudoku[0][0]);
+    int height = 9;  // TODO try to do it dynamically, something similar to "sizeof(sudoku) / sizeof(sudoku[0])"
+    
+    for (int j = 0; j < height; j++)
+    {
+        for (int i = 0; i < width; i++)
+        {
+            int* defaultArray = new int[9]; for (int i = 0; i < 9; i++) defaultArray[i] = i+1;
+            if (sudoku[i][j] == 0)           
+            {
+                std::cout << "ZERO ERROR!" << std::endl;
+                std::cout << "Number: " << sudoku[i][j] << std::endl;
+                std::cout << "i:" << i << " j:" << j << std::endl;
+                return false;
+            }
+            if (!checkHorizontal(sudoku, j, defaultArray))
+            {
+                std::cout << "HORIZONTAL ERROR!" << std::endl;
+                std::cout << "Number: " << sudoku[i][j] << std::endl;
+                std::cout << "i:" << i << " j:" << j << std::endl;
+                return false;
+            }
+            defaultArray = new int[9]; for (int i = 0; i < 9; i++) defaultArray[i] = i+1;
+            if (!checkVertical(sudoku, i, defaultArray))
+            {
+                std::cout << "VERTICAL ERROR!" << std::endl;
+                std::cout << "Number: " << sudoku[i][j] << std::endl;
+                std::cout << "i:" << i << " j:" << j << std::endl;
+                return false;
+            }
+            defaultArray = new int[9]; for (int i = 0; i < 9; i++) defaultArray[i] = i+1;
+            if (!checkBox(sudoku, i, j, defaultArray))
+            {
+                std::cout << "BOX ERROR!" << std::endl;
+                std::cout << "Number: " << sudoku[i][j] << std::endl;
+                std::cout << "i:" << i << " j:" << j << std::endl;
+                return false;
+            }
+            defaultArray = new int[9]; for (int i = 0; i < 9; i++) defaultArray[i] = i+1;
         }
     }
     return true;
 }
-

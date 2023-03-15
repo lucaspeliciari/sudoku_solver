@@ -30,7 +30,7 @@ void handleInput(int argc, char* argv[])
     if ((!logging && argc != 82) || (logging && argc != 83))  // only 9x9 sudoku supported
     {
         std::cout << "Sudoku puzzle string has to have 81 digits!" << std::endl << "Yours only has " << argc - 1 << " digits" << std::endl;
-        exit;  // TODO replace with "return 1;"
+        exit;  // TODO does not work, replace with "return 1;"
     }
 
     for (int j = 0; j < height; j++)  
@@ -42,7 +42,7 @@ void handleInput(int argc, char* argv[])
             if (sudoku[i][j] > 9 || sudoku[i][j] < 0)
             {
                 std::cout << "Only numbers from 0 to 9 are valid! \"" << argv[index] << "\" is not valid!" << std::endl;
-                exit;  // TODO replace with return 3;
+                exit;  // TODO does not work, replace with return 3;
             }
         }
     }
@@ -66,14 +66,21 @@ int main(int argc, char* argv[])
                 if (sudoku[i][j] != 0) continue;
 
                 reset(possibleAnswers);  // TODO can probably merge all 3 check functions
-                if (checkHorizontal(sudoku, j, possibleAnswers) && checkVertical(sudoku, i, possibleAnswers) && checkBox(sudoku, i, j, possibleAnswers))
+                // if (checkHorizontal(sudoku, j, possibleAnswers) && checkVertical(sudoku, i, possibleAnswers) && checkBox(sudoku, i, j, possibleAnswers))
+                // {
+                checkHorizontal(sudoku, j, possibleAnswers); checkVertical(sudoku, i, possibleAnswers); checkBox(sudoku, i, j, possibleAnswers);
+                if (length(possibleAnswers) == 1)
                 {
-                    if (length(possibleAnswers) == 1)
-                    {
-                        sudoku[i][j] = get(possibleAnswers);
-                        logger(sudoku);
-                    }
+                    sudoku[i][j] = get(possibleAnswers);
+                    logger(sudoku);
                 }
+                // }
+                // else
+                // {
+                //     string debugString = "DEBUG: STOPPED HERE  i:" + to_string(i) + " j:" + to_string(j);
+                //     logger(sudoku, debugString);
+                //     return 666;
+                // }
             }
         }
         tries++;
@@ -83,14 +90,14 @@ int main(int argc, char* argv[])
     solved = checkSolved(sudoku);
     std::cout << (solved ? "True" : "False") << std::endl;
 
-    if (!solved)  // all empty spaces have been successfully filled
+    if (!solved)
     {
         logger(sudoku, "PARTIAL ANSWER");
 
         int memoryIndex = 0;
         const int memory = 1000; // remember this amount of "moves"
         int* pastIndexes = new int[memory]; for (int i = 0; i < memory; i++) pastIndexes[i] = -1;
-        int* pastNumbers = new int[memory]; for (int i = 0; i < memory; i++) pastNumbers[i] = -1;
+        // int* pastNumbers = new int[memory]; for (int i = 0; i < memory; i++) pastNumbers[i] = 0;
         
         while (!solved)
         {
@@ -98,20 +105,35 @@ int main(int argc, char* argv[])
             {
                 for (int i = 0; i < width; i++)
                 {
-                    if (sudoku[i][j] != 0) continue;
-                    
-                    reset(possibleAnswers);
-                    while (length(possibleAnswers) > 1)
+                    // TODO test all this
+
+                    if (!checkHorizontal(sudoku, j, possibleAnswers) || 
+                        !checkVertical(sudoku, i, possibleAnswers) || 
+                        !checkBox(sudoku, i, j, possibleAnswers))
                     {
-                        if (!checkHorizontal(sudoku, j, possibleAnswers) || !checkVertical(sudoku, i, possibleAnswers) || !checkBox(sudoku, i, j, possibleAnswers))
+                        i = memoryIndex % width;  
+                        j = memoryIndex / width;
+                        if (sudoku[i][j] < 9)
                         {
-                            if (length(possibleAnswers) == 2)  // start with 2, maybe increase it later
-                            {
-                                int randomIndex = rand() % 2;
-                                sudoku[i][j] = get(possibleAnswers, randomIndex);
-                            }
+                            sudoku[i][j] = sudoku[i][j] + 1;
+                        }
+                        else
+                        {
+                            sudoku[i][j] = 0;
+                            pastIndexes[memoryIndex] = -1;
+                            memoryIndex--;
+                            i = memoryIndex % width;  
+                            j = memoryIndex / width;
                         }
                     }
+                    else if (sudoku[i][j] == 0)
+                    {
+                        sudoku[i][j] = 1;
+                        pastIndexes[memoryIndex] = i + j * width;
+                    }
+
+                    string backtrackIndexString = "Backtracking  i:" + to_string(i) + " j:" + to_string(j);
+                    logger(sudoku, backtrackIndexString);
                 }
             }
 
