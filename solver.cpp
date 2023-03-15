@@ -66,27 +66,18 @@ int main(int argc, char* argv[])
                 if (sudoku[i][j] != 0) continue;
 
                 reset(possibleAnswers);  // TODO can probably merge all 3 check functions
-                // if (checkHorizontal(sudoku, j, possibleAnswers) && checkVertical(sudoku, i, possibleAnswers) && checkBox(sudoku, i, j, possibleAnswers))
-                // {
                 checkHorizontal(sudoku, j, possibleAnswers); checkVertical(sudoku, i, possibleAnswers); checkBox(sudoku, i, j, possibleAnswers);
                 if (length(possibleAnswers) == 1)
                 {
                     sudoku[i][j] = get(possibleAnswers);
                     logger(sudoku);
                 }
-                // }
-                // else
-                // {
-                //     string debugString = "DEBUG: STOPPED HERE  i:" + to_string(i) + " j:" + to_string(j);
-                //     logger(sudoku, debugString);
-                //     return 666;
-                // }
             }
         }
         tries++;
     }
 
-    std::cout << "Solved... ";
+    std::cout << "Solved without guessing: ";
     solved = checkSolved(sudoku);
     std::cout << (solved ? "True" : "False") << std::endl;
 
@@ -137,13 +128,13 @@ int main(int argc, char* argv[])
                 }
             }
 
-            std::cout << "Solved... ";
+            std::cout << "Solved with backtracking: ";
             solved = checkSolved(sudoku);
             std::cout << (solved ? "True" : "False") << std::endl;
         }
     }
 
-    logger(sudoku, "ANSWER");
+    logger(sudoku, "FINAL ANSWER");
     endLog();
     cout << "END" << endl;
     return 0;

@@ -92,7 +92,7 @@ bool checkBox(int (*sudoku)[9], int i, int j, int* &possibleAnswer, int setNumbe
     return isValid;
 }
 
-bool checkSolved(int sudoku[9][9])  // TODO does not work
+bool checkSolved(int sudoku[9][9])
 {
     int width = sizeof(sudoku[0]) / sizeof(sudoku[0][0]);
     int height = 9;  // TODO try to do it dynamically, something similar to "sizeof(sudoku) / sizeof(sudoku[0])"
@@ -104,32 +104,20 @@ bool checkSolved(int sudoku[9][9])  // TODO does not work
             int* defaultArray = new int[9]; for (int i = 0; i < 9; i++) defaultArray[i] = i+1;
             if (sudoku[i][j] == 0)           
             {
-                std::cout << "ZERO ERROR!" << std::endl;
-                std::cout << "Number: " << sudoku[i][j] << std::endl;
-                std::cout << "i:" << i << " j:" << j << std::endl;
                 return false;
             }
             if (!checkHorizontal(sudoku, j, defaultArray))
             {
-                std::cout << "HORIZONTAL ERROR!" << std::endl;
-                std::cout << "Number: " << sudoku[i][j] << std::endl;
-                std::cout << "i:" << i << " j:" << j << std::endl;
                 return false;
             }
             defaultArray = new int[9]; for (int i = 0; i < 9; i++) defaultArray[i] = i+1;
             if (!checkVertical(sudoku, i, defaultArray))
             {
-                std::cout << "VERTICAL ERROR!" << std::endl;
-                std::cout << "Number: " << sudoku[i][j] << std::endl;
-                std::cout << "i:" << i << " j:" << j << std::endl;
                 return false;
             }
             defaultArray = new int[9]; for (int i = 0; i < 9; i++) defaultArray[i] = i+1;
             if (!checkBox(sudoku, i, j, defaultArray))
             {
-                std::cout << "BOX ERROR!" << std::endl;
-                std::cout << "Number: " << sudoku[i][j] << std::endl;
-                std::cout << "i:" << i << " j:" << j << std::endl;
                 return false;
             }
             defaultArray = new int[9]; for (int i = 0; i < 9; i++) defaultArray[i] = i+1;
