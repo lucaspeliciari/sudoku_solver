@@ -1,6 +1,7 @@
 void reset(int* &possibleAnswers)
 {
     for (int i = 0; i < 9; i++) possibleAnswers[i] = i+1;
+    return;
 }
 
 int length(int* &possibleAnswers)

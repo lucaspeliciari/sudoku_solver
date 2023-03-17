@@ -96,37 +96,40 @@ int main(int argc, char* argv[])
             {
                 for (int i = 0; i < width; i++)  // TODO make this work, it is very wrong
                 {
-                    reset(possibleAnswers);
-                    if (!checkHorizontal(sudoku, j, possibleAnswers) || 
-                        !checkVertical(sudoku, i, possibleAnswers) || 
-                        !checkBox(sudoku, i, j, possibleAnswers))
+                    int* possibleAnswers1 = new int[9]; reset(possibleAnswers1);  // TODO fix this stupidity later
+                    int* possibleAnswers2 = new int[9]; reset(possibleAnswers2);  // done just to make sure the possible answers array does not have any -1 at function start
+                    int* possibleAnswers3 = new int[9]; reset(possibleAnswers3);
+
+                    if (checkHorizontal(sudoku, j, possibleAnswers1) && checkVertical(sudoku, i, possibleAnswers2) && checkBox(sudoku, i, j, possibleAnswers3))
                     {
+                        if (sudoku[i][j] == 0)  // TODO don't repeat the exact same code 3 times in a row
+                        {
+                            sudoku[i][j] = 1;
+                            pastIndexes[memoryIndex] = i + j * width;
+                            memoryIndex++;
+                            string backtrackIndexString = "Found 0 and added 1 to it";
+                            logger(sudoku, backtrackIndexString);
+                        }
+                        continue;
+                    }
+                    
+                    i = memoryIndex % width;  
+                    j = memoryIndex / width;
+                    if (sudoku[i][j] < 9)
+                    {
+                        sudoku[i][j] = sudoku[i][j] + 1;
+                        memoryIndex++;
+                        string backtrackIndexString = "Added 1 to i:" + to_string(i) + " j:" + to_string(j);  // TODO don't let it add 1 to numbers that were already there when this while begun (check if index is in pastIndexes)
+                        logger(sudoku, backtrackIndexString);
+                    }
+                    else
+                    {
+                        sudoku[i][j] = 0;
+                        pastIndexes[memoryIndex] = -1;
+                        memoryIndex--;
                         i = memoryIndex % width;  
                         j = memoryIndex / width;
-                        if (sudoku[i][j] < 9)
-                        {
-                            sudoku[i][j] = sudoku[i][j] + 1;
-                            memoryIndex++;
-                            string backtrackIndexString = "Added 1 to i:" + to_string(i) + " j:" + to_string(j);
-                            logger(sudoku, backtrackIndexString);
-                        }
-                        else
-                        {
-                            sudoku[i][j] = 0;
-                            pastIndexes[memoryIndex] = -1;
-                            memoryIndex--;
-                            i = memoryIndex % width;  
-                            j = memoryIndex / width;
-                            string backtrackIndexString = "Returned to i:" + to_string(i) + " j:" + to_string(j);
-                            logger(sudoku, backtrackIndexString);
-                        }
-                    }
-                    else if (sudoku[i][j] == 0)
-                    {
-                        sudoku[i][j] = 1;
-                        pastIndexes[memoryIndex] = i + j * width;
-                        memoryIndex++;
-                        string backtrackIndexString = "Found 0 and added 1 to it";
+                        string backtrackIndexString = "Returned to i:" + to_string(i) + " j:" + to_string(j);
                         logger(sudoku, backtrackIndexString);
                     }
                 }
