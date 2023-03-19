@@ -4,7 +4,6 @@
 */
 
 
-// #include <iostream>
 #include <string>
 #include <cstring>
 #include "checks.cpp"
@@ -83,9 +82,9 @@ int main(int argc, char* argv[])
         tries++;
     }
 
-    std::cout << "Solved without guessing: ";
+    cout << "Solved without guessing: ";
     solved = checkSolved(sudoku);
-    std::cout << (solved ? "True" : "False") << std::endl;
+    cout << (solved ? "True" : "False") << endl;
 
     if (!solved)  // with guesses (backtracking)
     {
@@ -116,7 +115,7 @@ int main(int argc, char* argv[])
                 
             }
 
-            int* possibleAnswers1 = new int[9]; reset(possibleAnswers1);  // TODO fix this later
+            int* possibleAnswers1 = new int[9]; reset(possibleAnswers1);  // TODO fix this
             int* possibleAnswers2 = new int[9]; reset(possibleAnswers2);  // done just to make sure the possible answers array does not have any -1 at function start
             int* possibleAnswers3 = new int[9]; reset(possibleAnswers3);
             if (!checkHorizontal(sudoku, j, possibleAnswers1) || !checkVertical(sudoku, i, possibleAnswers2) || !checkBox(sudoku, i, j, possibleAnswers3))
@@ -195,8 +194,8 @@ int main(int argc, char* argv[])
             tries++;
         }
 
-        std::cout << "Solved with backtracking: ";
-        std::cout << (solved ? "True" : "False") << std::endl;
+        cout << "Solved with backtracking: ";
+        cout << (solved ? "True" : "False") << endl;
     }
 
     if (tries >= maxTries) cout << "Exceeded maximum amount of tries after " << tries << " tries" << endl;

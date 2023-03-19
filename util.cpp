@@ -1,5 +1,6 @@
 #include <iostream>
 
+
 void reset(int* &possibleAnswers)
 {
     for (int i = 0; i < 9; i++) possibleAnswers[i] = i+1;
@@ -36,7 +37,7 @@ int get(int* &possibleAnswers, int randomIndex = -1)
 void printPuzzle(int sudoku[9][9]) 
 {
     int width = sizeof(sudoku[0]) / sizeof(sudoku[0][0]);
-    int height = 9;  // TODO try to do it dynamically, something similar to "sizeof(sudoku) / sizeof(sudoku[0])"
+    int height = 9;
 
     std::cout << std::endl;
     for (int j = 0; j < height; j++)

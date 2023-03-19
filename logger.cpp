@@ -2,6 +2,7 @@
     Saves strings to a log.txt file
 */
 
+
 #include <fstream>
 
 
@@ -11,7 +12,7 @@ std::ofstream file("log.txt");
 void logger(int sudoku[9][9], std::string title="") 
 {
     int width = sizeof(sudoku[0]) / sizeof(sudoku[0][0]);
-    int height = 9;  // TODO try to do it dynamically, something similar to "sizeof(sudoku) / sizeof(sudoku[0])"
+    int height = 9;
 
     if (title.length() > 0) file << title << std::endl;
     for (int j = 0; j < height; j++)

@@ -1,16 +1,18 @@
 /*
     Functions that check lines or boxes for repeat numbers
-    TODO can probably merge all 3 check functions, with maxI and maxJ as arguments
 */
+
 
 #include <iostream>
 
+
+// TODO support variable width and height
 bool checkHorizontal(int (*sudoku)[9], int j, int* &possibleAnswer, int setNumber = 0)
 {
     bool isValid = true;
 
     int width = sizeof(sudoku[0]) / sizeof(sudoku[0][0]);
-    int height = 9;  // TODO try to do it dynamically, something similar to "sizeof(sudoku) / sizeof(sudoku[0])"
+    int height = 9;
 
     if (setNumber > 0) possibleAnswer[setNumber-1] = -1;
 
@@ -26,7 +28,6 @@ bool checkHorizontal(int (*sudoku)[9], int j, int* &possibleAnswer, int setNumbe
             else if (possibleAnswer[sudoku[i][j]-1] == -1) 
             {
                 isValid = false;
-                // std::cout << "ERROR horizontal: " << sudoku[i][j] << std::endl;
             }
         }
         
@@ -39,7 +40,7 @@ bool checkVertical(int (*sudoku)[9], int i, int* &possibleAnswer, int setNumber 
     bool isValid = true;
 
     int width = sizeof(sudoku[0]) / sizeof(sudoku[0][0]);
-    int height = 9;  // TODO try to do it dynamically, something similar to "sizeof(sudoku) / sizeof(sudoku[0])"
+    int height = 9;
 
     if (setNumber > 0) possibleAnswer[setNumber-1] = -1;
 
@@ -55,7 +56,6 @@ bool checkVertical(int (*sudoku)[9], int i, int* &possibleAnswer, int setNumber 
             else if (possibleAnswer[sudoku[i][j]-1] == -1) 
             {
                 isValid = false;
-                // std::cout << "ERROR vertical: " << sudoku[i][j] << std::endl;
             }
         }
         
@@ -68,7 +68,7 @@ bool checkBox(int (*sudoku)[9], int i, int j, int* &possibleAnswer, int setNumbe
     bool isValid = true;
 
     int width = sizeof(sudoku[0]) / sizeof(sudoku[0][0]);
-    int height = 9;  // TODO try to do it dynamically, something similar to "sizeof(sudoku) / sizeof(sudoku[0])"
+    int height = 9;
 
     int boxX = i / 3;
     int boxY = j / 3;
@@ -89,7 +89,6 @@ bool checkBox(int (*sudoku)[9], int i, int j, int* &possibleAnswer, int setNumbe
                 else if (possibleAnswer[sudoku[i][j]-1] == -1) 
                 {
                     isValid = false;
-                    // std::cout << "ERROR box: " << sudoku[i][j] << std::endl;
                 }
             }
         }
@@ -100,7 +99,7 @@ bool checkBox(int (*sudoku)[9], int i, int j, int* &possibleAnswer, int setNumbe
 bool checkSolved(int sudoku[9][9])
 {
     int width = sizeof(sudoku[0]) / sizeof(sudoku[0][0]);
-    int height = 9;  // TODO try to do it dynamically, something similar to "sizeof(sudoku) / sizeof(sudoku[0])"
+    int height = 9;
     
     for (int j = 0; j < height; j++)
     {
