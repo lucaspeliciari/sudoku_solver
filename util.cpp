@@ -32,35 +32,6 @@ int get(int* &possibleAnswers, int randomIndex = -1)
             
     return 0;
 }
-/*
-void printText()
-{
-    cout << ;
-    cout << endl;
-}
-*/
-
-void printArray(int* &array)
-{
-    for (int i = 0; i < 9; i++)
-    {
-        std::cout << array[i] << " ";
-    }
-    std::cout << std::endl;
-}
-
-int countFilledSpaces(int (*sudoku)[9])
-{
-    int count = 0;
-    for (int i = 0; i < 9; i++)
-    {
-        for (int j = 0; j < 9; j++)
-        {
-            if (sudoku[i][j] > 0 && sudoku[i][j] < 10) count++;
-        }
-    }
-    return count;
-}
 
 void printPuzzle(int sudoku[9][9]) 
 {
