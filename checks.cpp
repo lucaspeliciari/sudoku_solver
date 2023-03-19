@@ -3,6 +3,7 @@
     TODO can probably merge all 3 check functions, with maxI and maxJ as arguments
 */
 
+#include <iostream>
 
 bool checkHorizontal(int (*sudoku)[9], int j, int* &possibleAnswer, int setNumber = 0)
 {
@@ -25,6 +26,7 @@ bool checkHorizontal(int (*sudoku)[9], int j, int* &possibleAnswer, int setNumbe
             else if (possibleAnswer[sudoku[i][j]-1] == -1) 
             {
                 isValid = false;
+                // std::cout << "ERROR horizontal: " << sudoku[i][j] << std::endl;
             }
         }
         
@@ -53,6 +55,7 @@ bool checkVertical(int (*sudoku)[9], int i, int* &possibleAnswer, int setNumber 
             else if (possibleAnswer[sudoku[i][j]-1] == -1) 
             {
                 isValid = false;
+                // std::cout << "ERROR vertical: " << sudoku[i][j] << std::endl;
             }
         }
         
@@ -86,6 +89,7 @@ bool checkBox(int (*sudoku)[9], int i, int j, int* &possibleAnswer, int setNumbe
                 else if (possibleAnswer[sudoku[i][j]-1] == -1) 
                 {
                     isValid = false;
+                    // std::cout << "ERROR box: " << sudoku[i][j] << std::endl;
                 }
             }
         }

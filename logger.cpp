@@ -28,6 +28,15 @@ void logger(int sudoku[9][9], std::string title="")
     file << separator << std::endl << std::endl;
 }
 
+void loggerArray(int* &array)
+{
+    for (int i = 0; i < 9; i++)
+    {
+        file << array[i] << " ";
+    }
+    file << std::endl;
+}
+
 void endLog()
 {
     std::string separator("-------------------");

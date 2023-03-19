@@ -1,3 +1,5 @@
+#include <iostream>
+
 void reset(int* &possibleAnswers)
 {
     for (int i = 0; i < 9; i++) possibleAnswers[i] = i+1;
@@ -29,4 +31,20 @@ int get(int* &possibleAnswers, int randomIndex = -1)
         }
             
     return 0;
+}
+/*
+void printText()
+{
+    cout << ;
+    cout << endl;
+}
+*/
+
+void printArray(int* &array)
+{
+    for (int i = 0; i < 9; i++)
+    {
+        std::cout << array[i] << " ";
+    }
+    std::cout << std::endl;
 }
