@@ -18,20 +18,20 @@ using namespace std;
 const int width = 9;
 const int height = 9;
 int sudoku[width][height];
-int maxTries = 10000;
+int maxTries = 100000;
 bool solved = false;
 bool logging = false;
 
 
-void handleInput(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
     if (strcmp(argv[1], "-l") == 0)
         logging = true;
 
     if ((!logging && argc != 82) || (logging && argc != 83))  // only 9x9 sudoku supported
     {
-        std::cout << "Sudoku puzzle string has to have 81 digits!" << std::endl << "Yours only has " << argc - 1 << " digits" << std::endl;
-        exit;  // TODO does not work, replace with "return 1;"
+        std::cout << "Sudoku puzzle string has to have 81 digits!" << std::endl << "Yours only has " << argc - 1 << " digits" << std::endl << "END" << std::endl;
+        return 1;
     }
 
     for (int j = 0; j < height; j++)  
@@ -42,16 +42,11 @@ void handleInput(int argc, char* argv[])
             sudoku[i][j] = atoi(argv[index]);
             if (sudoku[i][j] > 9 || sudoku[i][j] < 0)
             {
-                std::cout << "Only numbers from 0 to 9 are valid! \"" << argv[index] << "\" is not valid!" << std::endl;
-                exit;  // TODO does not work, replace with return 3;
+                std::cout << "Only numbers from 0 to 9 are valid! \"" << argv[index] << "\" is not valid!" << std::endl << "END" << std::endl;
+                return 3;
             }
         }
     }
-}
-
-int main(int argc, char* argv[])
-{
-    handleInput(argc, argv);
 
     logger(sudoku, "ORIGINAL");
     
