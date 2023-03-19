@@ -48,3 +48,16 @@ void printArray(int* &array)
     }
     std::cout << std::endl;
 }
+
+int countFilledSpaces(int (*sudoku)[9])
+{
+    int count = 0;
+    for (int i = 0; i < 9; i++)
+    {
+        for (int j = 0; j < 9; j++)
+        {
+            if (sudoku[i][j] > 0 && sudoku[i][j] < 10) count++;
+        }
+    }
+    return count;
+}

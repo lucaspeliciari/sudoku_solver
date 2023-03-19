@@ -181,6 +181,7 @@ int main(int argc, char* argv[])
                 }
             }
             
+            cout << countFilledSpaces(sudoku) << endl;
 
             // SANITY CHECKS
             if (memoryIndex < 0 || memoryIndex > memory-1) 
