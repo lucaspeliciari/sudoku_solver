@@ -1,6 +1,6 @@
 /*
     SUDOKU SOLVER - 07/03/2023
-    TODO only log to txt if -l is present
+    TODO still a segmentation fault bug with certain puzzles, apparently when trying to backtrack more than once in a row
 */
 
 
@@ -18,19 +18,21 @@ using namespace std;
 const int width = 9;
 const int height = 9;
 int sudoku[width][height];
-int maxTries = 100000;
+int maxTries = 1000000;
 bool solved = false;
 bool logging = false;
 
 
-int main(int argc, char* argv[])
+int handleInput(int argc, char* argv[])
 {
     if (strcmp(argv[1], "-l") == 0)
         logging = true;
 
-    if ((!logging && argc != 82) || (logging && argc != 83))  // only 9x9 sudoku supported
+    string digitString = argv[1+logging];
+    if (digitString.length() != 81)
     {
-        std::cout << "Sudoku puzzle string has to have 81 digits!" << std::endl << "Yours only has " << argc - 1 << " digits" << std::endl << "END" << std::endl;
+        
+        cout << "Sudoku puzzle string has to have 81 digits!" << endl << "Yours only has " << strlen(argv[1+logging]) << " digits" << endl << "END" << endl;
         return 1;
     }
 
@@ -38,15 +40,23 @@ int main(int argc, char* argv[])
     {
         for (int i = 0; i < width; i++)
         {
-            int index = 1 + i + (j * width) + int(logging);  // 1 to skip first argv (path)
-            sudoku[i][j] = atoi(argv[index]);
-            if (sudoku[i][j] > 9 || sudoku[i][j] < 0)
+            int index = i + j * width;
+            sudoku[i][j] = int(digitString[index]) - 48;  // -48 due to ASCII value
+            if (sudoku[i][j] < 0 || sudoku[i][j] > 9)
             {
-                std::cout << "Only numbers from 0 to 9 are valid! \"" << argv[index] << "\" is not valid!" << std::endl << "END" << std::endl;
-                return 3;
+                cout << "Digits must be between 0 and 9" << endl << sudoku[i][j] << " is not valid" << endl << "Digit from string was " << int(digitString[index]) << endl << "END" << endl;
+                return 2;
             }
         }
     }
+    return 0;
+}
+
+int main(int argc, char* argv[])
+{
+    int inputHandling = handleInput(argc, argv);
+    if (inputHandling > 0)
+        return inputHandling;
 
     if (logging) logger(sudoku, "ORIGINAL");
     
@@ -83,7 +93,7 @@ int main(int argc, char* argv[])
         if (logging) logger(sudoku, "PARTIAL ANSWER");
 
         int memoryIndex = 0;
-        const int memory = 1000; // remember this amount of "moves"
+        const int memory = 10000000; // remember this amount of "moves"
         int* pastIndexes = new int[memory]; for (int i = 0; i < memory; i++) pastIndexes[i] = -1;
         
         int i = 0;
@@ -188,6 +198,8 @@ int main(int argc, char* argv[])
         std::cout << "Solved with backtracking: ";
         std::cout << (solved ? "True" : "False") << std::endl;
     }
+
+    if (tries >= maxTries) cout << "Exceeded maximum amount of tries after " << tries << " tries" << endl;
     
     if (logging)
     {
