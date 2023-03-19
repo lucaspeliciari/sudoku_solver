@@ -18,7 +18,7 @@ using namespace std;
 const int width = 9;
 const int height = 9;
 int sudoku[width][height];
-int maxTries = 10;
+int maxTries = 10000;
 bool solved = false;
 bool logging = false;
 
@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
                 if (length(possibleAnswers) == 1)
                 {
                     sudoku[i][j] = get(possibleAnswers);
-                    logger(sudoku);
+                    if (logging) logger(sudoku);
                 }
             }
         }
@@ -84,6 +84,7 @@ int main(int argc, char* argv[])
 
     if (!solved)  // with guesses (backtracking)
     {
+        tries = 0;
         logger(sudoku, "PARTIAL ANSWER");
 
         int memoryIndex = 0;
@@ -92,19 +93,22 @@ int main(int argc, char* argv[])
         
         int i = 0;
         int j = 0;
-        while (!solved)
+        while (!solved && tries < maxTries)
         {
             bool changed = false;
-
-            loggerArray(pastIndexes, memoryIndex);
 
             if (sudoku[i][j] == 0)
             {
                 sudoku[i][j] = 1;
                 pastIndexes[memoryIndex] = i + j * width;
                 memoryIndex++;
-                string backtrackIndexString = "Found 0 and added 1 to it at i:" + to_string(i) + " j:" + to_string(j);
-                logger(sudoku, backtrackIndexString);
+
+                if (logging) 
+                {
+                    string backtrackIndexString = "Found 0 and added 1 to it at i:" + to_string(i) + " j:" + to_string(j);
+                    logger(sudoku, backtrackIndexString);
+                }
+                
             }
 
             int* possibleAnswers1 = new int[9]; reset(possibleAnswers1);  // TODO fix this later
@@ -112,8 +116,12 @@ int main(int argc, char* argv[])
             int* possibleAnswers3 = new int[9]; reset(possibleAnswers3);
             if (!checkHorizontal(sudoku, j, possibleAnswers1) || !checkVertical(sudoku, i, possibleAnswers2) || !checkBox(sudoku, i, j, possibleAnswers3))
             {
-                string backtrackIndexString = "ERROR!!!!!!!! AT i:" + to_string(i) + " j:" + to_string(j);
-                logger(sudoku, backtrackIndexString);
+                if (logging) 
+                {
+                    string backtrackIndexString = "ERROR!!!!!!!! AT i:" + to_string(i) + " j:" + to_string(j);
+                    logger(sudoku, backtrackIndexString);
+                }
+                
 
                 if (i + j * width > 0)
                 {
@@ -125,50 +133,40 @@ int main(int argc, char* argv[])
                 if (sudoku[i][j] < 9)
                 {
                     sudoku[i][j] = sudoku[i][j] + 1;
-                    string backtrackIndexString = "Added 1 to current at i:" + to_string(i) + " j:" + to_string(j);
-                    logger(sudoku, backtrackIndexString);
+                    if (logging) 
+                    {
+                        string backtrackIndexString = "Added 1 to current at i:" + to_string(i) + " j:" + to_string(j);
+                        logger(sudoku, backtrackIndexString);
+                    }
                 }
                 else
                 {
                     sudoku[i][j] = 0;
                     pastIndexes[memoryIndex] = -1;
                     memoryIndex--;
-                    loggerArray(pastIndexes, memoryIndex);
                     i = pastIndexes[memoryIndex] % width;
                     j = pastIndexes[memoryIndex] / width;
-                    /*if (sudoku[i][j] < 9)
-                        sudoku[i][j] = sudoku[i][j] + 1;
-                    else
-                    {
-                        sudoku[i][j] = 0;
-                        pastIndexes[memoryIndex] = -1;
-                        memoryIndex--;
-                        loggerArray(pastIndexes, memoryIndex);
-                        i = pastIndexes[memoryIndex] % width;
-                        j = pastIndexes[memoryIndex] / width;
-                    }*/
 
                     while (sudoku[i][j] >= 9)
                     {
                         sudoku[i][j] = 0;
                         pastIndexes[memoryIndex] = -1;
                         memoryIndex--;
-                        loggerArray(pastIndexes, memoryIndex);
                         i = pastIndexes[memoryIndex] % width;
                         j = pastIndexes[memoryIndex] / width;
                     }
                     sudoku[i][j] = sudoku[i][j] + 1;
 
-                    string backtrackIndexString = "Went back to previous at i:" + to_string(i) + " j:" + to_string(j);
-                    logger(sudoku, backtrackIndexString);
+                    if (logging) 
+                    {
+                        string backtrackIndexString = "Went back to previous at i:" + to_string(i) + " j:" + to_string(j);
+                        logger(sudoku, backtrackIndexString);
+                    }
                 }
                 memoryIndex++;
-                // printArray(pastIndexes);
 
                 changed = true;
             }
-
-            // cout << memoryIndex << endl;
 
             // ITERATE
             if (!changed)
@@ -181,8 +179,6 @@ int main(int argc, char* argv[])
                 }
             }
             
-            cout << countFilledSpaces(sudoku) << endl;
-
             // SANITY CHECKS
             if (memoryIndex < 0 || memoryIndex > memory-1) 
             {
@@ -190,16 +186,14 @@ int main(int argc, char* argv[])
                 return 4;
             }
 
-            // CHECK IF PUZZLE WAS SOLVED
-            // std::cout << "Solved with backtracking: ";
             solved = checkSolved(sudoku);
-            // std::cout << (solved ? "True" : "False") << std::endl;
+            tries++;
         }
 
         std::cout << "Solved with backtracking: ";
         std::cout << (solved ? "True" : "False") << std::endl;
     }
-
+    
     logger(sudoku, "FINAL ANSWER");
     endLog();
     cout << "END" << endl;
