@@ -196,6 +196,7 @@ int main(int argc, char* argv[])
     
     logger(sudoku, "FINAL ANSWER");
     endLog();
-    cout << "END" << endl;
+    printPuzzle(sudoku);
+
     return 0;
 }
