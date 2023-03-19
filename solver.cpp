@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
         }
     }
 
-    logger(sudoku, "ORIGINAL");
+    if (logging) logger(sudoku, "ORIGINAL");
     
     int* possibleAnswers = new int[9];
 
@@ -80,7 +80,7 @@ int main(int argc, char* argv[])
     if (!solved)  // with guesses (backtracking)
     {
         tries = 0;
-        logger(sudoku, "PARTIAL ANSWER");
+        if (logging) logger(sudoku, "PARTIAL ANSWER");
 
         int memoryIndex = 0;
         const int memory = 1000; // remember this amount of "moves"
@@ -189,8 +189,11 @@ int main(int argc, char* argv[])
         std::cout << (solved ? "True" : "False") << std::endl;
     }
     
-    logger(sudoku, "FINAL ANSWER");
-    endLog();
+    if (logging)
+    {
+        logger(sudoku, "FINAL ANSWER");
+        endLog();
+    }
     printPuzzle(sudoku);
 
     return 0;
