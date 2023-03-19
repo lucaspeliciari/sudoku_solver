@@ -1,5 +1,5 @@
 # sudoku_solver
-Simple script that tries to solve a sudoku puzzle.<br>
+Simple C++ script that tries to solve a sudoku puzzle.<br>
 It first tries to solve it without any guesses.<br>
 If it fails to do that, it will run a backtracking algorithm.
 
