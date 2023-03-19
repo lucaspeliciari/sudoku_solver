@@ -96,9 +96,7 @@ int main(int argc, char* argv[])
         {
             bool changed = false;
 
-            cout << "START:  i:" << i << "  j:" << j << endl;
-            cout << "memoryIndex:" << memoryIndex << endl;
-            loggerArray(pastIndexes);
+            loggerArray(pastIndexes, memoryIndex);
 
             if (sudoku[i][j] == 0)
             {
@@ -107,10 +105,9 @@ int main(int argc, char* argv[])
                 memoryIndex++;
                 string backtrackIndexString = "Found 0 and added 1 to it at i:" + to_string(i) + " j:" + to_string(j);
                 logger(sudoku, backtrackIndexString);
-                // continue;  // remove this?
             }
 
-            int* possibleAnswers1 = new int[9]; reset(possibleAnswers1);  // TODO fix this stupidity later
+            int* possibleAnswers1 = new int[9]; reset(possibleAnswers1);  // TODO fix this later
             int* possibleAnswers2 = new int[9]; reset(possibleAnswers2);  // done just to make sure the possible answers array does not have any -1 at function start
             int* possibleAnswers3 = new int[9]; reset(possibleAnswers3);
             if (!checkHorizontal(sudoku, j, possibleAnswers1) || !checkVertical(sudoku, i, possibleAnswers2) || !checkBox(sudoku, i, j, possibleAnswers3))
@@ -118,7 +115,7 @@ int main(int argc, char* argv[])
                 string backtrackIndexString = "ERROR!!!!!!!! AT i:" + to_string(i) + " j:" + to_string(j);
                 logger(sudoku, backtrackIndexString);
 
-                if (i > 0 && j > 0)
+                if (i + j * width > 0)
                 {
                     memoryIndex--;
                     i = pastIndexes[memoryIndex] % width;
@@ -133,23 +130,45 @@ int main(int argc, char* argv[])
                 }
                 else
                 {
-                    cout << "A";
                     sudoku[i][j] = 0;
-                    memoryIndex--;memoryIndex--;
-                    cout << "B"; cout << endl << "pastIndex:" << pastIndexes[memoryIndex] <<  "   i:" << i << " j:" << j;
+                    pastIndexes[memoryIndex] = -1;
+                    memoryIndex--;
+                    loggerArray(pastIndexes, memoryIndex);
                     i = pastIndexes[memoryIndex] % width;
                     j = pastIndexes[memoryIndex] / width;
-                    cout << "C";
+                    /*if (sudoku[i][j] < 9)
+                        sudoku[i][j] = sudoku[i][j] + 1;
+                    else
+                    {
+                        sudoku[i][j] = 0;
+                        pastIndexes[memoryIndex] = -1;
+                        memoryIndex--;
+                        loggerArray(pastIndexes, memoryIndex);
+                        i = pastIndexes[memoryIndex] % width;
+                        j = pastIndexes[memoryIndex] / width;
+                    }*/
+
+                    while (sudoku[i][j] >= 9)
+                    {
+                        sudoku[i][j] = 0;
+                        pastIndexes[memoryIndex] = -1;
+                        memoryIndex--;
+                        loggerArray(pastIndexes, memoryIndex);
+                        i = pastIndexes[memoryIndex] % width;
+                        j = pastIndexes[memoryIndex] / width;
+                    }
                     sudoku[i][j] = sudoku[i][j] + 1;
-                    cout << "D";
+
                     string backtrackIndexString = "Went back to previous at i:" + to_string(i) + " j:" + to_string(j);
                     logger(sudoku, backtrackIndexString);
-                    cout << "E";
-                    memoryIndex++;
                 }
+                memoryIndex++;
+                // printArray(pastIndexes);
 
                 changed = true;
             }
+
+            // cout << memoryIndex << endl;
 
             // ITERATE
             if (!changed)
@@ -172,9 +191,12 @@ int main(int argc, char* argv[])
 
             // CHECK IF PUZZLE WAS SOLVED
             // std::cout << "Solved with backtracking: ";
-            // solved = checkSolved(sudoku);
+            solved = checkSolved(sudoku);
             // std::cout << (solved ? "True" : "False") << std::endl;
         }
+
+        std::cout << "Solved with backtracking: ";
+        std::cout << (solved ? "True" : "False") << std::endl;
     }
 
     logger(sudoku, "FINAL ANSWER");
